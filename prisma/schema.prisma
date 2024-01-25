@@ -1,0 +1,159 @@
+// Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Condominio {
+  id        Int       @id @default(autoincrement())
+  codice    String?   @unique
+  tipologia String
+  denominazione String
+  codiceFiscale String
+  comune    String
+  indirizzo String
+  sezioneUrbana String
+  foglio    String
+  particella String
+  superficie Float
+  posizioneINPS String
+  posizioneINAIL String
+  luogoAssemblea1 String
+  luogoAssemblea2 String
+  cifreDecimali Int
+  dataInizio DateTime
+  descrizione String
+  allegati   String[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Anagrafiche {
+  id        Int       @id @default(autoincrement())
+  tipologia String
+  email     String
+  emailPec  String
+  denominazione String
+  responsabile String
+  codiceFiscale String
+  partitaIva String
+  nazione   String
+  comune    String
+  indirizzo String
+  telefono  String
+  cellulare String
+  note      String
+  autorizzazione String
+  condominio Condominio @relation(fields: [condominioId], references: [id])
+  condominioId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model fornitori {
+  id        Int       @id @default(autoincrement())
+  email     String
+  emailPec  String
+  denominazione String
+  responsabile String
+  codiceFiscale String
+  partitaIva String
+  nazione   String
+  comune    String
+  indirizzo String
+  telefono  String
+  cellulare String
+  note      String
+  autorizzazione String
+  nomeBanca String
+  iban      String
+  tipoRitenuta String
+  causaliSommeErogate String
+  cciaa     String
+  inail     String
+  inps      String
+  albo      String
+  allegati   String[]
+  condominio Condominio @relation(fields: [condominioId], references: [id])
+  condominioId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model unitaImmobiliari {
+  id        Int       @id @default(autoincrement())
+  codice    String?   @unique
+  tipologia String
+  stato     String
+  subalterno String
+  mqUnita   Float
+  nVaniCatastali Int
+  scala     String
+  piano     String
+  interno   String
+  note     String
+  percentuali String[] // proprietà, usufrutto, conduzione, altri
+  subentri String[]
+  condominio Condominio @relation(fields: [condominioId], references: [id])
+  condominioId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Subentri {
+  id        Int       @id @default(autoincrement())
+  status   String
+  unitaImmobiliari unitaImmobiliari @relation(fields: [unitaImmobiliariId], references: [id])
+  tipologia String
+  anagrafica Anagrafiche @relation(fields: [anagraficheId], references: [id])
+  dataInizio DateTime
+  dataFine DateTime
+  percentualeSpesa Int
+  note     String
+  unitaImmobiliariId Int
+  anagraficheId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Strategy {
+  id            Int      @id @default(autoincrement())
+  title         String   @unique
+  description   String?
+  initialVPS    Float
+  initialTime   DateTime
+  poolAddresses String[]
+  sharesAddress String?
+  dexAccounts   String[]
+  cexAccounts   String[]
+  symbols       String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  snapshots     Snapshot[]
+}
+
+model Snapshot {
+  id          Int      @id @default(autoincrement())
+  strategyId  Int
+  VPS         Float
+  APY         Float
+  NAV         Float
+  timestamp   DateTime @default(now())
+  strategy    Strategy @relation(fields: [strategyId], references: [id])
+
+  @@unique([strategyId, timestamp])
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String?
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
