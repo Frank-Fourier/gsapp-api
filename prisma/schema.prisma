@@ -5,125 +5,780 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum TipologiaCondominio {
+  PREVALENZA_RESIDENZIALE
+  STANDARD
+  RESIDENZIALE
+  COMMERCIALE
+  PREVALENZA_COMMERCIALE
+  SUPER
+  MINIMO
+  MULTIPROPREITA
+}
+
+enum AliquotaIVA {
+  ZERO
+  QUATTRO
+  DIECI
+  VENTI
+  VENTUNO
+  VENTIDUE
+}
+
+enum AliquotaRitenuta {
+  QUATTRO
+  VENTI
+  VENTITRE
+}
+
+enum AliquotaVersata {
+  ZERO
+  QUATTRO
+  DIECI
+  VENTI
+  VENTUNO
+  VENTIDUE
+}
+
+enum TipologiaAnagrafica {
+  CONDOMINO
+  GENERICO
+}
+
+enum TipologiaGestione {
+  ORDINARIA
+  STRAORDINARIA
+  ORDINARIA_UTENZE_PRIVATE
+}
+
+enum TipologiaRitenuta {
+  A
+  B
+  C
+  D
+}
+
+enum CausaliSomme {
+  A
+  M
+  M1
+  O
+  O1
+  T
+  W
+}
+
+enum TipologiaSubentro {
+  PROPRIETA
+  CONDUZIONE
+  USUFRUTTO
+  ALTRO
+}
+
+enum TipologiaImmobile {
+  A1 // Abitazioni di tipo signorile
+  A2 // Abitazioni di tipo civile
+  A3 // Abitazioni di tipo economico
+  A4 // Abitazioni di tipo popolare
+  A5 // Abitazioni di tipo ultrapopolare
+  A6 // Abitazioni di tipo rurale
+  A7 // Abitazioni in villini
+  A8 // Abitazioni in ville
+  A9 // Palazzi di eminenti pregi artistici o storici
+  A10 // Uffici e studi privati
+  A11 // Abitazioni ed alloggi tipici dei luoghi
+  B1 // Collegi e convitti, educandati; ricoveri; orfanotrofi; ospizi; conventi; seminari; caserme
+  B2 // Case di cura ed ospedali (senza fine di lucro)
+  B3 // Prigioni e riformatori
+  B4 // Uffici pubblici
+  B5 // Scuole e laboratori scientifici
+  B6 // Biblioteche, pinacoteche, musei, gallerie, accademie che non hanno sede in edifici della categoria A9
+  B7 // Cappelle ed oratori non destinati all'esercizio pubblico del culto
+  B8 // Magazzini sotterranei per depositi di derrate
+  C1 // Negozi e botteghe
+  C2 // Magazzini e locali di deposito
+  C3 // Laboratori per arti e mestieri
+  C4 // Fabbricati e locali per esercizi sportivi (senza fine di lucro)
+  C5 // Stabilimenti balneari e di acque curative (senza fine di lucro)
+  C6 // Stalle, scuderie, rimessa, autorimesse (senza fine di lucro)
+  C7 // Tettoie chiuse od aperte
+  D1 // Opifici
+  D2 // Alberghi e pensioni (con fine di lucro)
+  D3 // Teatri, cinematografi, sale per concerti e spettacoli e simili (con fine di lucro)
+  D4 // Case di cura ed ospedali (con fine di lucro)
+  D5 // Istituti di credito, cambio e assicurazione (con fine di lucro)
+  D6 // Fabbricati e locali per esercizi sportivi (con fine di lucro)
+  D7 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività industriale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
+  D8 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività commerciale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
+  D9 // Edifici galleggianti o sospesi assicurati a punti fissi del suolo, ponti privati soggetti a pedaggio
+  D10 // Fabbricati per funzioni agricole
+  E1 // Stazioni per servizi di trasporto, terrestri, marittimi ed aerei
+  E2 // Ponti comunali e provinciali soggetti a pedaggio
+  E3 // Costruzioni e fabbricati per speciali esigenze pubbliche
+  E4 // Recinti chiusi per speciali esigenze pubbliche
+  E5 // Fabbricati costituenti fortificazioni e loro dipendenze
+  E6 // Fari, semafori, torri per rendere d'uso pubblico l'orologio comunale
+  E7 // Fabbricati destinati all'esercizio pubblico dei culti
+  E8 // Fabbricati e costruzioni nei cimiteri, esclusi i colombari, i sepolcri e le tombe di famiglia
+  E9 // Edifici a destinazione particolare non compresi nelle categorie precedenti del gruppo E
+}
+
+enum Status {
+  ATTIVO
+  SOSPESO
+  BLOCCATO
+  IN_LAVORAZIONE
 }
 
 model Condominio {
-  id        Int       @id @default(autoincrement())
-  codice    String?   @unique
-  tipologia String
-  denominazione String
-  codiceFiscale String
-  comune    String
-  indirizzo String
-  sezioneUrbana String
-  foglio    String
-  particella String
-  superficie Float
-  posizioneINPS String
-  posizioneINAIL String
-  luogoAssemblea1 String
-  luogoAssemblea2 String
-  cifreDecimali Int
-  dataInizio DateTime
-  descrizione String
-  allegati   String[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id               Int                 @id @default(autoincrement())
+  codice           String?             @unique
+  tipologia        TipologiaCondominio
+  denominazione    String
+  codiceFiscale    String
+  comune           String
+  indirizzo        String
+  sezioneUrbana    String
+  foglio           String
+  particella       String
+  superficie       Float
+  posizioneINPS    String
+  posizioneINAIL   String
+  luogoAssemblea1  String
+  luogoAssemblea2  String
+  cifreDecimali    Int
+  dataInizio       DateTime
+  descrizione      String
+  allegati         String[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  anagrafiche      Anagrafica[]
+  fornitori        Fornitore[]
+  unitaImmobiliari UnitaImmobiliare[]
+  tabelle          Tabella[]
+  gestioni         Gestione[]
+  risorse          Risorsa[]
+  fondi            Fondo[]
+  assemblee        Assemblee[]
 }
 
-model Anagrafiche {
-  id        Int       @id @default(autoincrement())
-  tipologia String
-  email     String
-  emailPec  String
-  denominazione String
-  responsabile String
-  codiceFiscale String
-  partitaIva String
-  nazione   String
-  comune    String
-  indirizzo String
-  telefono  String
-  cellulare String
-  note      String
-  autorizzazione String
-  condominio Condominio @relation(fields: [condominioId], references: [id])
+model Anagrafica {
+  id                      Int                      @id @default(autoincrement())
+  tipologia               TipologiaAnagrafica
+  email                   String
+  emailPec                String
+  denominazione           String
+  responsabile            String
+  codiceFiscale           String     @CodiceFiscale
+  // Nato il  // Data Di Nascita
+  partitaIva              String
+  nazione                 String
+  comune                  String
+  indirizzo               String
+  telefono                String
+  cellulare               String
+  note                    String
+  autorizzazione          String
+  condominioId            Int
+  condominio              Condominio               @relation(fields: [condominioId], references: [id])
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  subentri                Subentro[]
+  saldoDiversoGestione    SaldoDiversoGestione[]
+  anagraficheConvocazioni AnagraficaConvocazione[]
+  listaRate               ListaRate[]
+}
+
+Aggiunta media con caricamento jpeg, png che pdf
+
+model Fornitore {
+  id                       Int                        @id @default(autoincrement())
+  email                    String
+  emailPec                 String
+  denominazione            String
+  responsabile             String
+  codiceFiscale            String
+  partitaIva               String
+  nazione                  String                     @default("Italia")
+  comune                   String
+  indirizzo                String
+  telefono                 String
+  cellulare                String
+  note                     String
+  autorizzazione           String
+  nomeBanca                String
+  iban                     String
+  tipoRitenuta             TipologiaRitenuta
+  causaliSommeErogate      CausaliSomme
+  cciaa                    String
+  inail                    String
+  inps                     String
+  albo                     String
+  allegati                 String[]
+  condominioId             Int
+  condominio               Condominio                 @relation(fields: [condominioId], references: [id])
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  fornitoreGestioni        FornitoreGestione[]
+  ritenuteDAccontoGestione RitenutaDAccontoGestione[]
+  movimenti                Movimento[]
+}
+
+model UnitaImmobiliare {
+  id                       Int                        @id @default(autoincrement())
+  codice                   String?                    @unique
+  tipologia                TipologiaImmobile
+  status                   Status
+  subalterno               String
+  mqUnita                  Float
+  nVaniCatastali           Int
+  scala                    String
+  piano                    String
+  interno                  String
+  note                     String
+  percentuali              String[]
+  condominioId             Int
+  condominio               Condominio                 @relation(fields: [condominioId], references: [id])
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  Subentri                 Subentro[]
+  unitaImmobiliariGestione UnitaImmobiliareGestione[]
+  definizioneSuddivisioni  DefinizioneSuddivisione[]
+  anagraficheConvocazioni  AnagraficaConvocazione[]
+  incassi                  Incasso[]
+}
+
+model Subentro {
+  id                 Int              @id @default(autoincrement())
+  status             Status
+  unitaImmobiliareId Int
+  unitaImmobiliare   UnitaImmobiliare @relation(fields: [unitaImmobiliareId], references: [id])
+  tipologia          String
+  anagraficaId       Int
+  anagrafica         Anagrafica       @relation(fields: [anagraficaId], references: [id])
+  dataInizio         DateTime
+  dataFine           DateTime
+  percentualeSpesa   Int
+  note               String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Tabella {
+  id             Int           @id @default(autoincrement())
+  denominazione  String
+  valoreIniziale Int
+  descrizione    String
+  suddivisibile  Boolean
+  condominioId   Int
+  condominio     Condominio    @relation(fields: [condominioId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  mastriConti    MastroConto[]
+  assemblea      Assemblea[]
+}
+
+model Gestione {
+  id                       Int                        @id @default(autoincrement())
+  status                   Status
+  tipologia                TipologiaGestione
+  codice                   String?                    @unique
+  denominazione            String
+  descrizione              String
+  dataInizio               DateTime
+  dataFine                 DateTime
+  note                     String
+  gestionePrecedenteId     Int?
+  gestionePrecedente       Gestione?                  @relation("GestioneToGestionePrecedente", fields: [gestionePrecedenteId], references: [id])
+  gestioniSuccessive       Gestione[]                 @relation("GestioneToGestionePrecedente")
+  condominioId             Int
+  condominio               Condominio                 @relation(fields: [condominioId], references: [id])
+  fornitoriGestione        FornitoreGestione[]
+  unitaImmobiliariGestione UnitaImmobiliareGestione[]
+  saldiDiversiGestione     SaldoDiversoGestione[]
+  ritenuteDAccontoGestione RitenutaDAccontoGestione[]
+  preventivi               Preventivo[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+}
+
+model Preventivo {
+  id                Int                 @id @default(autoincrement())
+  gestioneId        Int
+  gestione          Gestione            @relation(fields: [gestioneId], references: [id])
+  codice            String
+  status            String
+  preventivo        String
+  nRate             Int
+  dataScadenza      DateTime
+  rateConGuaglio    Int
+  intervalloRate    Int
+  dataInizio        DateTime
+  dataFine          DateTime
+  descrizione       String
+  note              String
+  mastriPreventivo  MastroPreventivo[]
+  movimenti         Movimento[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  contiSuddivisioni ContiSuddivisione[]
+  PianoRateale      PianoRateale[]
+}
+
+model MastroPreventivo {
+  id            Int                   @id @default(autoincrement())
+  preventivoId  Int
+  preventivo    Preventivo            @relation(fields: [preventivoId], references: [id])
+  codice        String
+  descrizione   String
+  note          String
+  mastroContoId Int
+  mastroConto   MastroConto           @relation(fields: [mastroContoId], references: [id])
+  movimenti     MovimentoPreventivo[]
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+}
+
+model MovimentoPreventivo {
+  id                 Int              @id @default(autoincrement())
+  mastroPreventivoId Int
+  mastroPreventivo   MastroPreventivo @relation(fields: [mastroPreventivoId], references: [id])
+  contoId            Int
+  conto              String
+  importo            Float
+  descrizione        String
+  consuntivo         Float
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model FornitoreGestione {
+  id          Int       @id @default(autoincrement())
+  gestioneId  Int
+  gestione    Gestione  @relation(fields: [gestioneId], references: [id])
+  fornitoreId Int
+  fornitore   Fornitore @relation(fields: [fornitoreId], references: [id])
+  importo     Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model UnitaImmobiliareGestione {
+  id                    Int              @id @default(autoincrement())
+  gestioneId            Int
+  gestione              Gestione         @relation(fields: [gestioneId], references: [id])
+  unitaImmobiliareId    Int
+  unitaImmobiliare      UnitaImmobiliare @relation(fields: [unitaImmobiliareId], references: [id])
+  importo               Float
+  percentualeProprieta  Float
+  percentualeConduzione Float
+  percentualeUsufrutto  Float
+  percentualeAltro      Float
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+}
+
+model SaldoDiversoGestione {
+  id           Int        @id @default(autoincrement())
+  gestioneId   Int
+  gestione     Gestione   @relation(fields: [gestioneId], references: [id])
+  anagraficaId Int
+  anagrafica   Anagrafica @relation(fields: [anagraficaId], references: [id])
+  importo      Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model RitenutaDAccontoGestione {
+  id           Int       @id @default(autoincrement())
+  gestioneId   Int
+  gestione     Gestione  @relation(fields: [gestioneId], references: [id])
+  fornitoreId  Int
+  fornitore    Fornitore @relation(fields: [fornitoreId], references: [id])
+  importo      Float
+  dataScadenza DateTime
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Risorsa {
+  id             Int          @id @default(autoincrement())
+  codiceRisorsa  String       @unique
+  risorsa        String
+  descrizione    String
+  collegaRisorsa Boolean      @default(false)
+  agenzia        String?
+  provincia      String?
+  iban           String?
+  codiceBIC      String?
+  note           String?
+  operazioni     Operazione[]
+  movimenti      Movimento[]
+  condominioId   Int
+  condominio     Condominio   @relation(fields: [condominioId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  rate           Rate[]
+  incassi        Incasso[]
+}
+
+model Fondo {
+  id              Int               @id @default(autoincrement())
+  codiceFondo     String            @unique
+  includi         Boolean           @default(false)
+  fondoTFR        Boolean           @default(false)
+  fondo           String
+  descrizione     String
+  collegaFondo    Boolean           @default(false)
+  note            String?
+  operazioniFondo OperazioneFondo[]
+  condominioId    Int
+  condominio      Condominio        @relation(fields: [condominioId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Operazione {
+  id              Int      @id @default(autoincrement())
+  tipologia       String
+  descrizione     String
+  risorsaIniziale String   @default("CASSA")
+  importo         Float
+  dataOperazione  DateTime
+  risorsaId       Int
+  risorsa         Risorsa  @relation(fields: [risorsaId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model OperazioneFondo {
+  id             Int      @id @default(autoincrement())
+  tipologia      String
+  descrizione    String
+  status         String
+  importo        Float
+  dataOperazione DateTime
+  note           String?
+  fondoId        Int
+  fondo          Fondo    @relation(fields: [fondoId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model MastroConto {
+  id                Int                 @id @default(autoincrement())
+  status            String
+  codiceMastro      String              @unique
+  denominazione     String
+  descrizione       String
+  note              String?
+  tabellaId         Int
+  tabella           Tabella             @relation(fields: [tabellaId], references: [id])
+  conti             Conto[]
+  mastriPreventivo  MastroPreventivo[]
+  movimenti         Movimento[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  contiSuddivisioni ContiSuddivisione[]
+}
+
+model Conto {
+  id                Int                 @id @default(autoincrement())
+  status            String
+  codiceConto       String              @unique
+  conto             String
+  descrizione       String
+  note              String?
+  mastroContoId     Int
+  mastriConto       MastroConto         @relation(fields: [mastroContoId], references: [id])
+  movimenti         Movimento[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  contiSuddivisioni ContiSuddivisione[]
+}
+
+model Movimento {
+  id                        Int                       @id @default(autoincrement())
+  status                    String
+  dataMovimento             DateTime
+  dataCompetenza            DateTime
+  pagato                    Boolean
+  dataPagamento             DateTime?
+  preventivoId              Int?
+  preventivo                Preventivo?               @relation(fields: [preventivoId], references: [id])
+  mastroContoId             Int
+  mastroConto               MastroConto               @relation(fields: [mastroContoId], references: [id])
+  contoId                   Int
+  conto                     Conto                     @relation(fields: [contoId], references: [id])
+  fornitoreId               Int?
+  fornitore                 Fornitore?                @relation(fields: [fornitoreId], references: [id])
+  descrizione               String
+  risorsaId                 Int?
+  risorsa                   Risorsa?                  @relation(fields: [risorsaId], references: [id])
+  importo                   Float
+  riferimentoPagamento      String?
+  riferimentoFattura        String?
+  nProtocollo               String?
+  ritenute                  RitenuteMovimento[]
+  quadroUnico               String?
+  abilitaSuddivisione       Boolean                   @default(false)
+  suddivisioniConti         ContiSuddivisione[]
+  ignoraSuddivisioneTabelle Boolean                   @default(false)
+  definizioneSubentri       Boolean                   @default(false)
+  definizioneSuddivisioni   DefinizioneSuddivisione[]
+  ignoraPianoRateale        Boolean                   @default(false)
+  impostaRate               Boolean                   @default(false)
+  definisciRate             Boolean                   @default(false)
+  rateDefinite              DefinizioneRata[]
+  generaUnicaRata           Boolean                   @default(false)
+  dataRata                  DateTime?
+  pagamenti                 Pagamento[]
+  allegati                  String[]
+  note                      String?
+  createdAt                 DateTime                  @default(now())
+  updatedAt                 DateTime                  @updatedAt
+}
+
+model Pagamento {
+  id            Int       @id @default(autoincrement())
+  dataPagamento DateTime
+  importo       Float
+  movimentoId   Int
+  movimento     Movimento @relation(fields: [movimentoId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model DefinizioneRata {
+  id          Int        @id @default(autoincrement())
+  dataRata    DateTime
+  importo     Float
+  movimentoId Int? // Considera se questa relazione è necessaria
+  movimento   Movimento? @relation(fields: [movimentoId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model ContiSuddivisione {
+  id            Int         @id @default(autoincrement())
+  preventivoId  Int
+  preventivo    Preventivo  @relation(fields: [preventivoId], references: [id])
+  mastroContoId Int
+  mastroConto   MastroConto @relation(fields: [mastroContoId], references: [id])
+  contoId       Int
+  conto         Conto       @relation(fields: [contoId], references: [id])
+  importo       Float
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  movimento     Movimento?  @relation(fields: [movimentoId], references: [id])
+  movimentoId   Int?
+}
+
+model DefinizioneSuddivisione {
+  id                 Int              @id @default(autoincrement())
+  unitaImmobiliareId Int
+  unitaImmobiliare   UnitaImmobiliare @relation(fields: [unitaImmobiliareId], references: [id])
+  importo            Float
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  movimento          Movimento?       @relation(fields: [movimentoId], references: [id])
+  movimentoId        Int?
+}
+
+model RitenuteMovimento {
+  id                    Int              @id @default(autoincrement())
+  movimentoId           Int // Associa a un Movimento
+  movimento             Movimento        @relation(fields: [movimentoId], references: [id])
+  importoDocumento      Float
+  regimeAgevolato       Boolean
+  aliquotaIva           AliquotaIVA
+  aliquotaRitenuta      AliquotaRitenuta
+  imponibile            Float
+  nProtocollo           String?
+  ritenutaOperata       Float
+  pagato                Boolean
+  dataVersamento        DateTime?
+  riferimentoPagamento  String?
+  ritenutaVersata       Float
+  aliquotaVersata       AliquotaVersata
+  interessi             Float
+  diffVersamento        Float
+  ammontareLordo        Float
+  sommeNonSoggette      Float
+  imponibileRitenuta    Float
+  altreSommeNonSoggette Float
+  ritenuteSospese       Float
+  ravvedimento          Boolean
+  note                  String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+}
+
+model PianoRateale {
+  id               Int        @id @default(autoincrement())
+  tipologia        String
+  codicePiano      String
+  denominazione    String
+  descrizione      String
+  preventivoId     Int
+  preventivo       Preventivo @relation(fields: [preventivoId], references: [id])
+  sincronizzaConto Boolean    @default(false)
+  nRate            Int
+  intervalloRate   Int
+  giornoScadenza   Int?
+  nSuddivisione    Int?
+  dataInizio       DateTime
+  dataFine         DateTime?
+  note             String?
+  rate             Rate[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Rate {
+  id                    Int                @id @default(autoincrement())
+  pianoRatealeId        Int
+  pianoRateale          PianoRateale       @relation(fields: [pianoRatealeId], references: [id])
+  tipologia             String
+  importoRateizzato     Int
+  risorsaDefaultId      Int?
+  risorsaDefault        Risorsa?           @relation(fields: [risorsaDefaultId], references: [id])
+  ignoraSpecifiche      Boolean            @default(false)
+  arrotondaPercentuale  String?
+  suddivisioneRate      SuddivisioneRate[]
+  importiResidui        Boolean            @default(false)
+  accorpamentoRate      Boolean            @default(false)
+  rataMin               Int?
+  riportaAccorpamento   String?
+  arrotondaPer          String?
+  arrotondamento        String?
+  riportaArrotondamenti Int?
+  nRate                 Int?
+  dataInizio            DateTime?
+  dataFine              DateTime?
+  giornoScadenza        DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  listeRate             ListaRate[]
+}
+
+model SuddivisioneRate {
+  id        Int         @id @default(autoincrement())
+  rateId    Int
+  rate      Rate        @relation(fields: [rateId], references: [id])
+  dataRata  DateTime
+  importo   Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  listeRate ListaRate[]
+}
+
+model ListaRate {
+  id             Int              @id @default(autoincrement())
+  rateId         Int
+  rate           Rate             @relation(fields: [rateId], references: [id])
+  suddivisioneId Int
+  suddivisione   SuddivisioneRate @relation(fields: [suddivisioneId], references: [id])
+  scala          String?
+  codiceUnita    String?
+  piano          String?
+  interno        String?
+  anagraficaId   Int
+  anagrafica     Anagrafica       @relation(fields: [anagraficaId], references: [id])
+  totale         Float
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Incasso {
+  id                 Int              @id @default(autoincrement())
+  rateGenerate       Boolean          @default(true)
+  importo            Float?
+  unitaImmobiliareId Int
+  unitaImmobiliare   UnitaImmobiliare @relation(fields: [unitaImmobiliareId], references: [id])
+  riferimento        String
+  dataIncasso        DateTime         @default(now())
+  risorsaId          Int
+  risorsa            Risorsa          @relation(fields: [risorsaId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Assemblee {
+  id           Int         @id @default(autoincrement())
   condominioId Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  condominio   Condominio  @relation(fields: [condominioId], references: [id])
+  assemblee    Assemblea[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
-model fornitori {
-  id        Int       @id @default(autoincrement())
-  email     String
-  emailPec  String
-  denominazione String
-  responsabile String
-  codiceFiscale String
-  partitaIva String
-  nazione   String
-  comune    String
-  indirizzo String
-  telefono  String
-  cellulare String
-  note      String
-  autorizzazione String
-  nomeBanca String
-  iban      String
-  tipoRitenuta String
-  causaliSommeErogate String
-  cciaa     String
-  inail     String
-  inps      String
-  albo      String
-  allegati   String[]
-  condominio Condominio @relation(fields: [condominioId], references: [id])
-  condominioId Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+model Assemblea {
+  id                      Int                      @id @default(autoincrement())
+  status                  String
+  descrizione             String
+  tipologia               String
+  tabellaId               Int
+  tabella                 Tabella                  @relation(fields: [tabellaId], references: [id])
+  presidente              String
+  segretario              String
+  ruoli                   String[]
+  personeRuoli            String[]
+  convocazioni            Convocazione[]
+  anagraficheConvocazioni AnagraficaConvocazione[]
+  ordineDelGiorno         OrdineDelGiorno[]
+  noteAssemblea           String
+  noteInterne             String
+  allegati                String[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  assemblee               Assemblee?               @relation(fields: [assembleeId], references: [id])
+  assembleeId             Int?
 }
 
-model unitaImmobiliari {
-  id        Int       @id @default(autoincrement())
-  codice    String?   @unique
-  tipologia String
-  stato     String
-  subalterno String
-  mqUnita   Float
-  nVaniCatastali Int
-  scala     String
-  piano     String
-  interno   String
-  note     String
-  percentuali String[] // proprietà, usufrutto, conduzione, altri
-  subentri String[]
-  condominio Condominio @relation(fields: [condominioId], references: [id])
-  condominioId Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+model OrdineDelGiorno {
+  id           Int       @id @default(autoincrement())
+  assembleaId  Int
+  assemblea    Assemblea @relation(fields: [assembleaId], references: [id])
+  numeroOrdine Int
+  descrizione  String
+  note         String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
-model Subentri {
-  id        Int       @id @default(autoincrement())
-  status   String
-  unitaImmobiliari unitaImmobiliari @relation(fields: [unitaImmobiliariId], references: [id])
-  tipologia String
-  anagrafica Anagrafiche @relation(fields: [anagraficheId], references: [id])
-  dataInizio DateTime
-  dataFine DateTime
-  percentualeSpesa Int
-  note     String
-  unitaImmobiliariId Int
-  anagraficheId Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+model Convocazione {
+  id               Int       @id @default(autoincrement())
+  assembleaId      Int
+  assemblea        Assemblea @relation(fields: [assembleaId], references: [id])
+  dataConvocazione DateTime
+  oraInizio        String
+  luogo            String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model AnagraficaConvocazione {
+  id                 Int              @id @default(autoincrement())
+  assembleaId        Int
+  assemblea          Assemblea        @relation(fields: [assembleaId], references: [id])
+  anagraficaId       Int
+  anagrafica         Anagrafica       @relation(fields: [anagraficaId], references: [id])
+  delegato           String?
+  unitaImmobiliareId Int
+  unitaImmobiliare   UnitaImmobiliare @relation(fields: [unitaImmobiliareId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 }
 
 model Strategy {
-  id            Int      @id @default(autoincrement())
-  title         String   @unique
+  id            Int        @id @default(autoincrement())
+  title         String     @unique
   description   String?
   initialVPS    Float
   initialTime   DateTime
@@ -132,28 +787,28 @@ model Strategy {
   dexAccounts   String[]
   cexAccounts   String[]
   symbols       String[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   snapshots     Snapshot[]
 }
 
 model Snapshot {
-  id          Int      @id @default(autoincrement())
-  strategyId  Int
-  VPS         Float
-  APY         Float
-  NAV         Float
-  timestamp   DateTime @default(now())
-  strategy    Strategy @relation(fields: [strategyId], references: [id])
+  id         Int      @id @default(autoincrement())
+  strategyId Int
+  VPS        Float
+  APY        Float
+  NAV        Float
+  timestamp  DateTime @default(now())
+  strategy   Strategy @relation(fields: [strategyId], references: [id])
 
   @@unique([strategyId, timestamp])
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String?
-  email     String    @unique
+  email     String   @unique
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
