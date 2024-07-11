@@ -24,8 +24,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
-    .setTitle('CivFund')
-    .setDescription('The CivFund KPI frontend API')
+    .setTitle('GSApp')
+    .setDescription('The GSApp backend API')
     .setVersion('0.1')
     .addBearerAuth()
     .build();
