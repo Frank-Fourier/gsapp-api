@@ -1,4 +1,5 @@
 // Prisma schema file
+// SISTEMA CODICI E SOTTOCODICI
 
 generator client {
   provider = "prisma-client-js"
@@ -9,26 +10,25 @@ datasource db {
   url      = env("DATABASE_URL_TEST")
 }
 
-enum TipologiaAnagrafica {
-  CONDOMINO
-  GENERICO
-}
-
 enum TipologiaRitenuta {
-  A
-  B
-  C
-  D
+  QUATTRO
+  VENTI
+  VENTITRE
+  ZERO
 }
 
 enum CausaliSomme {
-  A
-  M
-  M1
-  O
-  O1
-  T
-  W
+  AUTONOMO
+  CU
+  MONOMANDATARIO
+  PLURIMANDATARIO
+  COMMISSIONARIO
+  MEDIATORE
+  PROCACCIATORE
+  APPALTATORE
+  DIVERSI
+  OCCASIONALE
+  PROFESSIONISTA
 }
 
 enum TipologiaCondominio {
@@ -42,74 +42,391 @@ enum TipologiaCondominio {
   MULTIPROPREITA
 }
 
+enum TipologiaAnagrafica {
+  FISICA
+  GIURIDICAPERSONE
+  GIURIDICAPITALI
+}
+
+enum TipologiaCassa {
+  QUATTRO
+  CINQUE
+  ZERO
+}
+
+enum TipologiaIVA {
+  ZERO
+  QUATTRO
+  DIECI
+  VENTIDUE
+}
+
+enum TipologiaImmobile {
+  A1 // Abitazioni di tipo signorile
+  A2 // Abitazioni di tipo civile
+  A3 // Abitazioni di tipo economico
+  A4 // Abitazioni di tipo popolare
+  A5 // Abitazioni di tipo ultrapopolare
+  A6 // Abitazioni di tipo rurale
+  A7 // Abitazioni in villini
+  A8 // Abitazioni in ville
+  A9 // Palazzi di eminenti pregi artistici o storici
+  A10 // Uffici e studi privati
+  A11 // Abitazioni ed alloggi tipici dei luoghi
+  B1 // Collegi e convitti, educandati; ricoveri; orfanotrofi; ospizi; conventi; seminari; caserme
+  B2 // Case di cura ed ospedali (senza fine di lucro)
+  B3 // Prigioni e riformatori
+  B4 // Uffici pubblici
+  B5 // Scuole e laboratori scientifici
+  B6 // Biblioteche, pinacoteche, musei, gallerie, accademie che non hanno sede in edifici della categoria A9
+  B7 // Cappelle ed oratori non destinati all'esercizio pubblico del culto
+  B8 // Magazzini sotterranei per depositi di derrate
+  C1 // Negozi e botteghe
+  C2 // Magazzini e locali di deposito
+  C3 // Laboratori per arti e mestieri
+  C4 // Fabbricati e locali per esercizi sportivi (senza fine di lucro)
+  C5 // Stabilimenti balneari e di acque curative (senza fine di lucro)
+  C6 // Stalle, scuderie, rimessa, autorimesse (senza fine di lucro)
+  C7 // Tettoie chiuse od aperte
+  D1 // Opifici
+  D2 // Alberghi e pensioni (con fine di lucro)
+  D3 // Teatri, cinematografi, sale per concerti e spettacoli e simili (con fine di lucro)
+  D4 // Case di cura ed ospedali (con fine di lucro)
+  D5 // Istituti di credito, cambio e assicurazione (con fine di lucro)
+  D6 // Fabbricati e locali per esercizi sportivi (con fine di lucro)
+  D7 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività industriale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
+  D8 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività commerciale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
+  D9 // Edifici galleggianti o sospesi assicurati a punti fissi del suolo, ponti privati soggetti a pedaggio
+  D10 // Fabbricati per funzioni agricole
+  E1 // Stazioni per servizi di trasporto, terrestri, marittimi ed aerei
+  E2 // Ponti comunali e provinciali soggetti a pedaggio
+  E3 // Costruzioni e fabbricati per speciali esigenze pubbliche
+  E4 // Recinti chiusi per speciali esigenze pubbliche
+  E5 // Fabbricati costituenti fortificazioni e loro dipendenze
+  E6 // Fari, semafori, torri per rendere d'uso pubblico l'orologio comunale
+  E7 // Fabbricati destinati all'esercizio pubblico dei culti
+  E8 // Fabbricati e costruzioni nei cimiteri, esclusi i colombari, i sepolcri e le tombe di famiglia
+  E9 // Edifici a destinazione particolare non compresi nelle categorie precedenti del gruppo E
+}
+
+enum TipologiaFondo {
+  CASSA
+  SPECIALI
+  TFR
+}
+
+enum TipologiaGestione {
+  ORDINARIA
+  STRAORDINARIA
+  UTENZE_PRIVATE
+}
+
+model ProfiloAmministratore {
+  id          Int          @id @default(autoincrement())
+  nome        String
+  cognome     String
+  email       String
+  password    String
+  documenti   String[]
+  allegati    String[]
+  logo        String
+  anagrafiche Anagrafica[]
+  fornitori   Fornitore[]
+  dipendenti  Dipendente[]
+  condomini   Condominio[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
 model Anagrafica {
-  id            Int                 @id @default(autoincrement())
-  tipologia     TipologiaAnagrafica
-  email         String
-  emailPec      String
-  denominazione String
-  responsabile  String
-  codiceFiscale String
-  partitaIva    String
-  nazione       String
-  comune        String
-  indirizzo     String
-  telefono      String
-  cellulare     String
-  note          String
-  autorizzazione String
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
+  id                 Int                   @id @default(autoincrement())
+  idAmministratore   Int
+  email              String
+  emailPec           String
+  tipologia          TipologiaAnagrafica
+  nome               String
+  cognome            String
+  ragioneSociale     String //se societa  responsabile  String
+  responsabile       String
+  codiceFiscale      String
+  partitaIva         String
+  nazioneResidenza   String
+  comuneResidenza    String
+  indirizzoResidenza String
+  capResidenza       String
+  nazioneDomicilio   String
+  comuneDomicilio    String
+  indirizzoDomicilio String
+  capDomicilio       String
+  dataNascita        DateTime
+  luogoNascita       String
+  telefono           String
+  cellulare          String
+  note               String
+  documenti          String[]
+  allegati           String[]
+  amministratoreId   Int
+  amministratore     ProfiloAmministratore @relation(fields: [amministratoreId], references: [id])
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
 }
 
 model Fornitore {
-  id                  Int                 @id @default(autoincrement())
+  id                  Int                   @id @default(autoincrement())
   email               String
   emailPec            String
-  denominazione       String
+  tipologia           TipologiaAnagrafica
+  nome                String
+  cognome             String
+  ragioneSociale      String //se societa
   responsabile        String
-  codiceFiscale       String
-  partitaIva          String
-  nazione             String              @default("Italia")
-  comune              String
-  indirizzo           String
-  telefono            String
-  cellulare           String
+  codiceFiscale       String //controllo
+  partitaIva          String //controllo
+  nazioneResidenza    String
+  comuneResidenza     String
+  indirizzoResidenza  String
+  capResidenza        String
+  nazioneDomicilio    String
+  comuneDomicilio     String
+  indirizzoDomicilio  String
+  capDomicilio        String
+  nazioneSedeLegale   String
+  comuneSedeLegale    String
+  indirizzoSedeLegale String
+  capSedeLegale       String
+  dataNascita         DateTime
+  luogoNascita        String
+  telefono            String //controllo
+  cellulare           String //controllo
   note                String
-  autorizzazione      String
   nomeBanca           String
   iban                String
+  cassaPrevidenza     TipologiaCassa
+  inps                String?
+  iva1                TipologiaIVA? //Default: ZERO
+  iva2                TipologiaIVA?
+  iva3                TipologiaIVA?
   tipoRitenuta        TipologiaRitenuta
   causaliSommeErogate CausaliSomme
-  cciaa               String
-  inail               String
-  inps                String
-  albo                String
+  cciaa               String?
+  inail               String?
+  albo                String?
+  documenti           String[]
   allegati            String[]
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
+  amministratoreId    Int
+  amministratore      ProfiloAmministratore @relation(fields: [amministratoreId], references: [id])
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model Dipendente {
+  id                  Int                   @id @default(autoincrement())
+  email               String
+  emailPec            String
+  nome                String
+  cognome             String
+  codiceFiscale       String //controllo
+  nazioneResidenza    String
+  comuneResidenza     String
+  indirizzoResidenza  String
+  capResidenza        String
+  nazioneDomicilio    String
+  comuneDomicilio     String
+  indirizzoDomicilio  String
+  capDomicilio        String
+  dataNascita         DateTime
+  luogoNascita        String
+  telefono            String //controllo
+  cellulare           String //controllo
+  note                String
+  nomeBanca           String
+  iban                String
+  causaliSommeErogate CausaliSomme
+  documenti           String[]
+  allegati            String[]
+  amministratoreId    Int
+  amministratore      ProfiloAmministratore @relation(fields: [amministratoreId], references: [id])
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 }
 
 model Condominio {
-  id               Int                 @id @default(autoincrement())
-  codice           String?             @unique
-  tipologia        TipologiaCondominio
-  denominazione    String
-  codiceFiscale    String
-  comune           String
-  indirizzo        String
-  sezioneUrbana    String
-  foglio           String
-  particella       String
-  superficie       Float
-  posizioneINPS    String
-  posizioneINAIL   String
-  luogoAssemblea1  String
-  luogoAssemblea2  String
-  cifreDecimali    Int
-  dataInizio       DateTime
-  descrizione      String
-  allegati         String[]
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
+  id                       Int                       @id @default(autoincrement())
+  codice                   String?                   @unique
+  tipologia                TipologiaCondominio
+  denominazione            String
+  codiceFiscale            String
+  comune                   String
+  indirizzo                String
+  cap                      String
+  sezioneUrbana            String
+  foglio                   Int
+  particella               Int
+  totalSuperficie          Float // derivato
+  totaleUnita              Int // derivato
+  totaleVani               Float // derivato
+  posizioneINPS            String
+  posizioneINAIL           String
+  luogoAssemblea1          String
+  luogoAssemblea2          String
+  decimaliMillesimi        Int
+  descrizione              String
+  allegati                 String[]
+  dataPresaInCarico        DateTime
+  amministratoreId         Int
+  amministratore           ProfiloAmministratore     @relation(fields: [amministratoreId], references: [id])
+  datiPatrimonialiIniziali DatiPatrimonialiIniziali?
+  unitaImmobiliari         UnitaImmobiliare[]
+  tabelle                  Tabella[]
+  contiMastro              ContoMastro[]
+  risorse                  Risorsa[]
+  fondi                    Fondo[]
+  transazioni              Transazione[]
+  gestioni                 Gestione[]
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+}
+
+model UnitaImmobiliare {
+  id                      Int               @id @default(autoincrement())
+  tipologia               TipologiaImmobile
+  subalterno              String
+  superficie              Float
+  vani                    Int
+  scala                   String
+  piano                   String
+  interno                 String
+  note                    String
+  nudaProprietaAttiva     String[] //Struct with data start
+  usufruttoAttivo         String[] //Struct with data start
+  proprietarioAttivo      String[] //Struct with data start
+  nudaProprietaPrecedente String[] //Struct with data start (optional) and end 
+  usufruttoPrecendente    String[] //Struct with data start (optional) and end
+  proprietarioPrecedente  String[] //Struct with data start (optional) and end
+  conduttorePrecedente    String[] //Struct with data start (optional) and end
+  condominioId            Int
+  condominio              Condominio        @relation(fields: [condominioId], references: [id])
+  transazioni             Transazione[]
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+}
+
+model Tabella {
+  id                       Int        @id @default(autoincrement())
+  denominazione            String
+  totaleMillesimi          Int
+  ripartizioneMillesimi    String[]
+  percentualeNudaProprieta String[]
+  percentualeUsufrutto     String[]
+  percentualeProprieta     String[]
+  percentualeConduttore    String[]
+  descrizione              String
+  condominioId             Int
+  condominio               Condominio @relation(fields: [condominioId], references: [id])
+  updatedAt                DateTime   @updatedAt
+  createdAt                DateTime   @default(now())
+}
+
+model ContoMastro {
+  id           Int        @id @default(autoincrement())
+  descrizione  String
+  note         String
+  tabellaId    Int // riferimento a Tabella
+  conti        String[]
+  condominioId Int
+  condominio   Condominio @relation(fields: [condominioId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Risorsa {
+  id              Int           @id @default(autoincrement())
+  saldo           Float
+  denominazione   String
+  descrizione     String
+  istitutoCredito String
+  agenzia         String?
+  iban            String?
+  codiceBIC       String?
+  note            String?
+  condominioId    Int
+  condominio      Condominio    @relation(fields: [condominioId], references: [id])
+  transazioni     Transazione[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Fondo {
+  id            Int            @id @default(autoincrement())
+  saldo         Float
+  tipologia     TipologiaFondo
+  denominazione String
+  descrizione   String
+  condominioId  Int
+  condominio    Condominio     @relation(fields: [condominioId], references: [id])
+  transazioni   Transazione[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Transazione {
+  id                     Int               @id @default(autoincrement())
+  data                   DateTime
+  importo                Float
+  descrizione            String?
+  riferimento            String
+  provenienzaFornitore   String
+  provenienzaAnagrafica  String
+  destinazioneFornitore  String
+  destinazioneAnagrafica String
+  condominioId           Int
+  condominio             Condominio        @relation(fields: [condominioId], references: [id])
+  unitaImmobiliareId     Int?
+  unitaImmobiliare       UnitaImmobiliare? @relation(fields: [unitaImmobiliareId], references: [id])
+  risorsaId              Int
+  risorsa                Risorsa           @relation(fields: [risorsaId], references: [id])
+  fondoId                Int?
+  fondo                  Fondo?            @relation(fields: [fondoId], references: [id])
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+}
+
+model DatiPatrimonialiIniziali {
+  id                        Int        @id @default(autoincrement())
+  debitiUnitaImmobiliari    Int[]
+  debitiDettaglio           String[]
+  creditiUnitaImmobiliari   Int[]
+  dettaglioUnitaImmobiliare String[]
+  debitiFornitori           Int[]
+  dettaglioFornitori        String[]
+  fornitoriCrediti          Int[]
+  dettaglioFornitoriCrediti String[]
+  risorseGestione           String[]
+  saldoRisorse              Float[]
+  fondiGestione             String[]
+  consistenzaFondo          Float[]
+  descrizione               String
+  condominioId              Int        @unique
+  condominio                Condominio @relation(fields: [condominioId], references: [id])
+  createdAt                 DateTime   @default(now())
+  updatedAt                 DateTime   @updatedAt
+}
+
+model Gestione {
+  id                        Int               @id @default(autoincrement())
+  tipologia                 TipologiaGestione
+  debitiUnitaImmobiliari    Int[]
+  debitiDettaglio           String[]
+  creditiUnitaImmobiliari   Int[]
+  dettaglioUnitaImmobiliare String[]
+  debitiFornitori           Int[]
+  dettaglioFornitori        String[]
+  fornitoriCrediti          Int[]
+  dettaglioFornitoriCrediti String[]
+  denominazione             String
+  descrizione               String
+  condominioId              Int
+  condominio                Condominio        @relation(fields: [condominioId], references: [id])
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
 }
