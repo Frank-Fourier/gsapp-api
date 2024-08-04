@@ -1,4 +1,5 @@
+// src/fornitori/dto/update-fornitore.dto.ts
 import { PartialType } from '@nestjs/swagger';
-import { CreateAnagraficaDto } from './create-anagrafica.dto';
+import { CreateFornitoreDto } from './create-fornitore.dto';
 
-export class UpdateAnagraficaDto extends PartialType(CreateAnagraficaDto) {}
+export class UpdateFornitoreDto extends PartialType(CreateFornitoreDto) {}

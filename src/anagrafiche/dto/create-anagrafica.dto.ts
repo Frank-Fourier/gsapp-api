@@ -1,23 +1,9 @@
+// src/anagrafiche/dto/create-anagrafica.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsEmail,
-  //IsOptional,
-  MaxLength,
-} from 'class-validator';
-
-enum TipologiaAnagrafica {
-  CONDOMINO = 'CONDOMINO',
-  GENERICO = 'GENERICO',
-}
+import { IsNotEmpty, IsString, IsEmail, IsOptional, MaxLength, IsDate, IsEnum, IsInt } from 'class-validator';
+import { TipologiaAnagrafica } from '@prisma/client';
 
 export class CreateAnagraficaDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ enum: TipologiaAnagrafica })
-  tipologia: TipologiaAnagrafica;
-
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty()
@@ -28,15 +14,33 @@ export class CreateAnagraficaDto {
   @ApiProperty()
   emailPec: string;
 
+  @IsEnum(TipologiaAnagrafica)
+  @IsNotEmpty()
+  @ApiProperty({ enum: TipologiaAnagrafica })
+  tipologia: TipologiaAnagrafica;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
   @ApiProperty()
-  denominazione: string;
+  nome: string;
 
   @IsString()
+  @IsOptional()
   @MaxLength(100)
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  cognome: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  @ApiProperty({ required: false })
+  ragioneSociale: string; // se societa
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  @ApiProperty({ required: false })
   responsabile: string;
 
   @IsString()
@@ -45,23 +49,59 @@ export class CreateAnagraficaDto {
   codiceFiscale: string;
 
   @IsString()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   partitaIva: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  nazione: string;
+  nazioneResidenza: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  comune: string;
+  comuneResidenza: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  indirizzo: string;
+  indirizzoResidenza: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  capResidenza: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  nazioneDomicilio: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  comuneDomicilio: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  indirizzoDomicilio: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  capDomicilio: string;
+
+  @IsDate()
+  @IsNotEmpty()
+  @ApiProperty({ type: String, format: 'date-time' })
+  dataNascita: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  luogoNascita: string;
 
   @IsString()
   @IsNotEmpty()
@@ -69,14 +109,27 @@ export class CreateAnagraficaDto {
   telefono: string;
 
   @IsString()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   cellulare: string;
 
   @IsString()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   note: string;
 
-  @IsString()
+  @IsString({ each: true })
+  @IsOptional()
+  @ApiProperty({ type: [String], required: false })
+  documenti: string[];
+
+  @IsString({ each: true })
+  @IsOptional()
+  @ApiProperty({ type: [String], required: false })
+  allegati: string[];
+
+  @IsInt()
+  @IsNotEmpty()
   @ApiProperty()
-  autorizzazione: string;
+  amministratoreId: number;
 }

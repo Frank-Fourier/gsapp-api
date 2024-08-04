@@ -1,36 +1,37 @@
+// src/fornitori/fornitori.service.ts
 import { Injectable } from '@nestjs/common';
-import { CreateAnagraficaDto } from './dto/create-anagrafica.dto';
-import { UpdateAnagraficaDto } from './dto/update-anagrafica.dto';
+import { CreateFornitoreDto } from './dto/create-fornitore.dto';
+import { UpdateFornitoreDto } from './dto/update-fornitore.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class AnagraficheService {
+export class FornitoriService {
   constructor(private prisma: PrismaService) {}
 
-  create(createAnagraficaDto: CreateAnagraficaDto) {
-    return this.prisma.anagrafica.create({
-      data: createAnagraficaDto,
+  create(createFornitoreDto: CreateFornitoreDto) {
+    return this.prisma.fornitore.create({
+      data: createFornitoreDto,
     });
   }
 
   findAll() {
-    return this.prisma.anagrafica.findMany();
+    return this.prisma.fornitore.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.anagrafica.findUnique({
+    return this.prisma.fornitore.findUnique({
       where: { id },
     });
   }
 
-  update(id: number, updateAnagraficaDto: UpdateAnagraficaDto) {
-    return this.prisma.anagrafica.update({
+  update(id: number, updateFornitoreDto: UpdateFornitoreDto) {
+    return this.prisma.fornitore.update({
       where: { id },
-      data: updateAnagraficaDto,
+      data: updateFornitoreDto,
     });
   }
 
   remove(id: number) {
-    return this.prisma.anagrafica.delete({ where: { id } });
+    return this.prisma.fornitore.delete({ where: { id } });
   }
 }

@@ -2,15 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { CreateAnagraficaDto } from './dto/create-anagrafica.dto';
 import { UpdateAnagraficaDto } from './dto/update-anagrafica.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AnagraficheService {
   constructor(private prisma: PrismaService) {}
 
   create(createAnagraficaDto: CreateAnagraficaDto) {
-    return this.prisma.anagrafica.create({
-      data: createAnagraficaDto,
-    });
+    const data: Prisma.AnagraficaCreateInput = {
+      ...createAnagraficaDto,
+      amministratore: {
+        connect: { id: createAnagraficaDto.amministratoreId },
+      },
+    };
+    return this.prisma.anagrafica.create({ data });
   }
 
   findAll() {
@@ -24,9 +29,15 @@ export class AnagraficheService {
   }
 
   update(id: number, updateAnagraficaDto: UpdateAnagraficaDto) {
+    const data: Prisma.AnagraficaUpdateInput = {
+      ...updateAnagraficaDto,
+      amministratore: {
+        connect: { id: updateAnagraficaDto.amministratoreId },
+      },
+    };
     return this.prisma.anagrafica.update({
       where: { id },
-      data: updateAnagraficaDto,
+      data,
     });
   }
 

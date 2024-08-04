@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_TEST")
+  url      = env("DATABASE_URL")
 }
 
 enum TipologiaRitenuta {
@@ -45,7 +45,7 @@ enum TipologiaCondominio {
 enum TipologiaAnagrafica {
   FISICA
   GIURIDICAPERSONE
-  GIURIDICAPITALI
+  GIURIDICACAPITALI
 }
 
 enum TipologiaCassa {
@@ -62,51 +62,51 @@ enum TipologiaIVA {
 }
 
 enum TipologiaImmobile {
-  A1 // Abitazioni di tipo signorile
-  A2 // Abitazioni di tipo civile
-  A3 // Abitazioni di tipo economico
-  A4 // Abitazioni di tipo popolare
-  A5 // Abitazioni di tipo ultrapopolare
-  A6 // Abitazioni di tipo rurale
-  A7 // Abitazioni in villini
-  A8 // Abitazioni in ville
-  A9 // Palazzi di eminenti pregi artistici o storici
-  A10 // Uffici e studi privati
-  A11 // Abitazioni ed alloggi tipici dei luoghi
-  B1 // Collegi e convitti, educandati; ricoveri; orfanotrofi; ospizi; conventi; seminari; caserme
-  B2 // Case di cura ed ospedali (senza fine di lucro)
-  B3 // Prigioni e riformatori
-  B4 // Uffici pubblici
-  B5 // Scuole e laboratori scientifici
-  B6 // Biblioteche, pinacoteche, musei, gallerie, accademie che non hanno sede in edifici della categoria A9
-  B7 // Cappelle ed oratori non destinati all'esercizio pubblico del culto
-  B8 // Magazzini sotterranei per depositi di derrate
-  C1 // Negozi e botteghe
-  C2 // Magazzini e locali di deposito
-  C3 // Laboratori per arti e mestieri
-  C4 // Fabbricati e locali per esercizi sportivi (senza fine di lucro)
-  C5 // Stabilimenti balneari e di acque curative (senza fine di lucro)
-  C6 // Stalle, scuderie, rimessa, autorimesse (senza fine di lucro)
-  C7 // Tettoie chiuse od aperte
-  D1 // Opifici
-  D2 // Alberghi e pensioni (con fine di lucro)
-  D3 // Teatri, cinematografi, sale per concerti e spettacoli e simili (con fine di lucro)
-  D4 // Case di cura ed ospedali (con fine di lucro)
-  D5 // Istituti di credito, cambio e assicurazione (con fine di lucro)
-  D6 // Fabbricati e locali per esercizi sportivi (con fine di lucro)
-  D7 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività industriale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
-  D8 // Fabbricati costruiti o adattati per le speciali esigenze di un'attività commerciale e non suscettibili di destinazione diversa senza rilevanti trasformazioni
-  D9 // Edifici galleggianti o sospesi assicurati a punti fissi del suolo, ponti privati soggetti a pedaggio
-  D10 // Fabbricati per funzioni agricole
-  E1 // Stazioni per servizi di trasporto, terrestri, marittimi ed aerei
-  E2 // Ponti comunali e provinciali soggetti a pedaggio
-  E3 // Costruzioni e fabbricati per speciali esigenze pubbliche
-  E4 // Recinti chiusi per speciali esigenze pubbliche
-  E5 // Fabbricati costituenti fortificazioni e loro dipendenze
-  E6 // Fari, semafori, torri per rendere d'uso pubblico l'orologio comunale
-  E7 // Fabbricati destinati all'esercizio pubblico dei culti
-  E8 // Fabbricati e costruzioni nei cimiteri, esclusi i colombari, i sepolcri e le tombe di famiglia
-  E9 // Edifici a destinazione particolare non compresi nelle categorie precedenti del gruppo E
+  A1
+  A2
+  A3
+  A4
+  A5
+  A6
+  A7
+  A8
+  A9
+  A10
+  A11
+  B1
+  B2
+  B3
+  B4
+  B5
+  B6
+  B7
+  B8
+  C1
+  C2
+  C3
+  C4
+  C5
+  C6
+  C7
+  D1
+  D2
+  D3
+  D4
+  D5
+  D6
+  D7
+  D8
+  D9
+  D10
+  E1
+  E2
+  E3
+  E4
+  E5
+  E6
+  E7
+  E8
+  E9
 }
 
 enum TipologiaFondo {
@@ -140,14 +140,13 @@ model ProfiloAmministratore {
 
 model Anagrafica {
   id                 Int                   @id @default(autoincrement())
-  idAmministratore   Int
   email              String
   emailPec           String
   tipologia          TipologiaAnagrafica
   nome               String
   cognome            String
-  ragioneSociale     String //se societa  responsabile  String
-  responsabile       String
+  ragioneSociale     String? //se societa
+  responsabile       String?
   codiceFiscale      String
   partitaIva         String
   nazioneResidenza   String
@@ -178,8 +177,8 @@ model Fornitore {
   tipologia           TipologiaAnagrafica
   nome                String
   cognome             String
-  ragioneSociale      String //se societa
-  responsabile        String
+  ragioneSociale      String? //se societa
+  responsabile        String?
   codiceFiscale       String //controllo
   partitaIva          String //controllo
   nazioneResidenza    String
@@ -203,7 +202,7 @@ model Fornitore {
   iban                String
   cassaPrevidenza     TipologiaCassa
   inps                String?
-  iva1                TipologiaIVA? //Default: ZERO
+  iva1                TipologiaIVA? @default(ZERO)
   iva2                TipologiaIVA?
   iva3                TipologiaIVA?
   tipoRitenuta        TipologiaRitenuta
