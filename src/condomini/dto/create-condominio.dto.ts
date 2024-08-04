@@ -1,6 +1,6 @@
 // src/condomini/dto/create-condominio.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsInt, IsDate, MaxLength, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt, IsDate, MaxLength, IsEnum, IsArray, IsNumber } from 'class-validator';
 import { TipologiaCondominio } from '@prisma/client';
 
 export class CreateCondominioDto {
@@ -54,6 +54,21 @@ export class CreateCondominioDto {
   @ApiProperty()
   particella: number;
 
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  totalSuperficie: number;
+
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  totaleUnita: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  totaleVani: number;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -84,7 +99,7 @@ export class CreateCondominioDto {
   @ApiProperty({ required: false })
   descrizione: string;
 
-  @IsString({ each: true })
+  @IsArray()
   @IsOptional()
   @ApiProperty({ type: [String], required: false })
   allegati: string[];

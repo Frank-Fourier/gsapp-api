@@ -1,6 +1,6 @@
-// src/anagrafiche/dto/create-anagrafica.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsEmail, IsOptional, MaxLength, IsDate, IsEnum, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';  // Import Type decorator
 import { TipologiaAnagrafica } from '@prisma/client';
 
 export class CreateAnagraficaDto {
@@ -94,6 +94,7 @@ export class CreateAnagraficaDto {
   capDomicilio: string;
 
   @IsDate()
+  @Type(() => Date)  // Use Type decorator to transform the string to Date
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   dataNascita: Date;

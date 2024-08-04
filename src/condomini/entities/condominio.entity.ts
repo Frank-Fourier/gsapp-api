@@ -36,6 +36,15 @@ export class CondominioEntity implements Condominio {
   @ApiProperty()
   particella: number;
 
+  @ApiProperty({ required: false })
+  totalSuperficie: number;
+
+  @ApiProperty({ required: false })
+  totaleUnita: number;
+
+  @ApiProperty({ required: false })
+  totaleVani: number;
+
   @ApiProperty()
   posizioneINPS: string;
 
