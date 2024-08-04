@@ -1,11 +1,12 @@
+// src/fornitori/fornitori.module.ts
 import { Module } from '@nestjs/common';
-import { AnagraficheService } from './anagrafiche.service';
-import { AnagraficheController } from './anagrafiche.controller';
+import { FornitoriService } from './fornitori.service';
+import { FornitoriController } from './fornitori.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  controllers: [AnagraficheController],
-  providers: [AnagraficheService],
+  controllers: [FornitoriController],
+  providers: [FornitoriService],
   imports: [PrismaModule],
 })
-export class AnagraficheModule {}
+export class FornitoriModule {}

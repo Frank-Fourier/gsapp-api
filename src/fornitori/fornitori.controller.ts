@@ -1,3 +1,4 @@
+// src/fornitori/fornitori.controller.ts
 import {
   Controller,
   Get,
@@ -9,56 +10,56 @@ import {
   NotFoundException,
   ParseIntPipe,
 } from '@nestjs/common';
-import { AnagraficheService } from './anagrafiche.service';
-import { CreateAnagraficaDto } from './dto/create-anagrafica.dto';
-import { UpdateAnagraficaDto } from './dto/update-anagrafica.dto';
+import { FornitoriService } from './fornitori.service';
+import { CreateFornitoreDto } from './dto/create-fornitore.dto';
+import { UpdateFornitoreDto } from './dto/update-fornitore.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AnagraficaEntity } from './entities/anagrafica.entity';
+import { FornitoreEntity } from './entities/fornitore.entity';
 
-@Controller('anagrafiche')
-@ApiTags('anagrafiche')
-export class AnagraficheController {
-  constructor(private readonly anagraficheService: AnagraficheService) {}
+@Controller('fornitori')
+@ApiTags('fornitori')
+export class FornitoriController {
+  constructor(private readonly fornitoriService: FornitoriService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: AnagraficaEntity })
-  async create(@Body() createAnagraficaDto: CreateAnagraficaDto) {
-    return new AnagraficaEntity(
-      await this.anagraficheService.create(createAnagraficaDto),
+  @ApiCreatedResponse({ type: FornitoreEntity })
+  async create(@Body() createFornitoreDto: CreateFornitoreDto) {
+    return new FornitoreEntity(
+      await this.fornitoriService.create(createFornitoreDto),
     );
   }
 
   @Get()
-  @ApiOkResponse({ type: AnagraficaEntity, isArray: true })
+  @ApiOkResponse({ type: FornitoreEntity, isArray: true })
   async findAll() {
-    const anagrafiche = await this.anagraficheService.findAll();
-    return anagrafiche.map((anagrafica) => new AnagraficaEntity(anagrafica));
+    const fornitori = await this.fornitoriService.findAll();
+    return fornitori.map((fornitore) => new FornitoreEntity(fornitore));
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: AnagraficaEntity })
+  @ApiOkResponse({ type: FornitoreEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const anagrafica = await this.anagraficheService.findOne(id);
-    if (!anagrafica) {
-      throw new NotFoundException(`Anagrafica with ID ${id} does not exist.`);
+    const fornitore = await this.fornitoriService.findOne(id);
+    if (!fornitore) {
+      throw new NotFoundException(`Fornitore with ID ${id} does not exist.`);
     }
-    return new AnagraficaEntity(anagrafica);
+    return new FornitoreEntity(fornitore);
   }
 
   @Patch(':id')
-  @ApiCreatedResponse({ type: AnagraficaEntity })
+  @ApiCreatedResponse({ type: FornitoreEntity })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateAnagraficaDto: UpdateAnagraficaDto,
+    @Body() updateFornitoreDto: UpdateFornitoreDto,
   ) {
-    return new AnagraficaEntity(
-      await this.anagraficheService.update(id, updateAnagraficaDto),
+    return new FornitoreEntity(
+      await this.fornitoriService.update(id, updateFornitoreDto),
     );
   }
 
   @Delete(':id')
-  @ApiOkResponse({ type: AnagraficaEntity })
+  @ApiOkResponse({ type: FornitoreEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return new AnagraficaEntity(await this.anagraficheService.remove(id));
+    return new FornitoreEntity(await this.fornitoriService.remove(id));
   }
 }

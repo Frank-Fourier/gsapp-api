@@ -3,15 +3,20 @@ import { Injectable } from '@nestjs/common';
 import { CreateFornitoreDto } from './dto/create-fornitore.dto';
 import { UpdateFornitoreDto } from './dto/update-fornitore.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class FornitoriService {
   constructor(private prisma: PrismaService) {}
 
   create(createFornitoreDto: CreateFornitoreDto) {
-    return this.prisma.fornitore.create({
-      data: createFornitoreDto,
-    });
+    const data: Prisma.FornitoreCreateInput = {
+      ...createFornitoreDto,
+      amministratore: {
+        connect: { id: createFornitoreDto.amministratoreId },
+      },
+    };
+    return this.prisma.fornitore.create({ data });
   }
 
   findAll() {
@@ -25,9 +30,15 @@ export class FornitoriService {
   }
 
   update(id: number, updateFornitoreDto: UpdateFornitoreDto) {
+    const data: Prisma.FornitoreUpdateInput = {
+      ...updateFornitoreDto,
+      amministratore: {
+        connect: { id: updateFornitoreDto.amministratoreId },
+      },
+    };
     return this.prisma.fornitore.update({
       where: { id },
-      data: updateFornitoreDto,
+      data,
     });
   }
 
