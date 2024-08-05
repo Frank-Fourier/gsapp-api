@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProfiloAmministratoreDto } from './dto/create-profilo-amministratore.dto';
 import { UpdateProfiloAmministratoreDto } from './dto/update-profilo-amministratore.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,28 +8,36 @@ import { Prisma } from '@prisma/client';
 export class ProfiliAmministratoreService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createProfiloAmministratoreDto: CreateProfiloAmministratoreDto) {
+  create(createProfiloAmministratoreDto: CreateProfiloAmministratoreDto) {
     const data: Prisma.ProfiloAmministratoreCreateInput = {
       ...createProfiloAmministratoreDto,
     };
     return this.prisma.profiloAmministratore.create({ data });
   }
 
-  async findAll() {
+  findAll() {
     return this.prisma.profiloAmministratore.findMany();
   }
 
-  async findOne(id: number) {
-    const profiloAmministratore = await this.prisma.profiloAmministratore.findUnique({
+  findOne(id: number) {
+    return this.prisma.profiloAmministratore.findUnique({
       where: { id },
-    });
-    if (!profiloAmministratore) {
-      throw new NotFoundException(`ProfiloAmministratore with ID ${id} not found.`);
-    }
-    return profiloAmministratore;
+    });;
   }
 
-  async update(id: number, updateProfiloAmministratoreDto: UpdateProfiloAmministratoreDto) {
+  findOneWithRelations(id: number) {
+    return this.prisma.profiloAmministratore.findUnique({
+      where: { id },
+      include: {
+        anagrafiche: true,
+        fornitori: true,
+        dipendenti: true,
+        condomini: true,
+      },
+    });
+  }
+
+  update(id: number, updateProfiloAmministratoreDto: UpdateProfiloAmministratoreDto) {
     const data: Prisma.ProfiloAmministratoreUpdateInput = {
       ...updateProfiloAmministratoreDto,
     };
@@ -39,7 +47,7 @@ export class ProfiliAmministratoreService {
     });
   }
 
-  async remove(id: number) {
+  remove(id: number) {
     return this.prisma.profiloAmministratore.delete({ where: { id } });
   }
 }

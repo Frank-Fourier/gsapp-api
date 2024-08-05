@@ -1,6 +1,7 @@
 // src/fondo/entities/fondo.entity.ts
 import { Fondo, TipologiaFondo } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { TransazioneEntity } from '../../transazioni/entities/transazione.entity';  // Adjust the import path as necessary
 
 export class FondoEntity implements Fondo {
   @ApiProperty()
@@ -28,6 +29,16 @@ export class FondoEntity implements Fondo {
   updatedAt: Date;
 
   constructor(partial: Partial<FondoEntity>) {
+    Object.assign(this, partial);
+  }
+}
+
+export class FondoWithTransazioniEntity extends FondoEntity {
+  @ApiProperty({ type: () => [TransazioneEntity] })
+  transazioni: TransazioneEntity[];
+
+  constructor(partial: Partial<FondoWithTransazioniEntity>) {
+    super(partial);
     Object.assign(this, partial);
   }
 }

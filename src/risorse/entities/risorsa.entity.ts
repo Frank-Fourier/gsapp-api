@@ -1,6 +1,7 @@
 // src/risorsa/entities/risorsa.entity.ts
 import { Risorsa } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { TransazioneEntity } from '../../transazioni/entities/transazione.entity';  // Adjust the import path as necessary
 
 export class RisorsaEntity implements Risorsa {
   @ApiProperty()
@@ -40,6 +41,16 @@ export class RisorsaEntity implements Risorsa {
   updatedAt: Date;
 
   constructor(partial: Partial<RisorsaEntity>) {
+    Object.assign(this, partial);
+  }
+}
+
+export class RisorsaWithTransazioniEntity extends RisorsaEntity {
+  @ApiProperty({ type: () => [TransazioneEntity] })
+  transazioni: TransazioneEntity[];
+
+  constructor(partial: Partial<RisorsaWithTransazioniEntity>) {
+    super(partial);
     Object.assign(this, partial);
   }
 }

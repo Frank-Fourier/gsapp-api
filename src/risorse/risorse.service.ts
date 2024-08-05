@@ -30,6 +30,13 @@ export class RisorseService {
     });
   }
 
+  findOneWithTransazioni(id: number) {
+    return this.prisma.risorsa.findUnique({
+      where: { id },
+      include: { transazioni: true }, // Include related transazioni
+    });
+  }
+
   update(id: number, updateRisorsaDto: UpdateRisorsaDto) {
     const { condominioId, ...rest } = updateRisorsaDto;
     const data: Prisma.RisorsaUpdateInput = {

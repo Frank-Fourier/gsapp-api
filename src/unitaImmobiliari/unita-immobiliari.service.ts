@@ -30,6 +30,13 @@ export class UnitaImmobiliariService {
     });
   }
 
+  findOneWithTransazioni(id: number) {
+    return this.prisma.unitaImmobiliare.findUnique({
+      where: { id },
+      include: { transazioni: true }, // Include related transazioni
+    });
+  }
+
   update(id: number, updateUnitaImmobiliareDto: UpdateUnitaImmobiliareDto) {
     const { condominioId, ...rest } = updateUnitaImmobiliareDto;
     const data: Prisma.UnitaImmobiliareUpdateInput = {

@@ -1,6 +1,7 @@
 // src/unita-immobiliari/entities/unita-immobiliare.entity.ts
 import { UnitaImmobiliare, TipologiaImmobile } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { TransazioneEntity } from '../../transazioni/entities/transazione.entity';  // Adjust the import path as necessary
 
 export class UnitaImmobiliareEntity implements UnitaImmobiliare {
   @ApiProperty()
@@ -61,6 +62,16 @@ export class UnitaImmobiliareEntity implements UnitaImmobiliare {
   updatedAt: Date;
 
   constructor(partial: Partial<UnitaImmobiliareEntity>) {
+    Object.assign(this, partial);
+  }
+}
+
+export class UnitaImmobiliareWithTransazioniEntity extends UnitaImmobiliareEntity {
+  @ApiProperty({ type: () => [TransazioneEntity] })
+  transazioni: TransazioneEntity[];
+
+  constructor(partial: Partial<UnitaImmobiliareWithTransazioniEntity>) {
+    super(partial);
     Object.assign(this, partial);
   }
 }

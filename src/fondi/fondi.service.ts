@@ -30,6 +30,13 @@ export class FondiService {
     });
   }
 
+  findOneWithTransazioni(id: number) {
+    return this.prisma.fondo.findUnique({
+      where: { id },
+      include: { transazioni: true }, // Include related transazioni
+    });
+  }
+
   update(id: number, updateFondoDto: UpdateFondoDto) {
     const { condominioId, ...rest } = updateFondoDto;
     const data: Prisma.FondoUpdateInput = {
