@@ -10,10 +10,11 @@ export class RisorseService {
   constructor(private prisma: PrismaService) {}
 
   create(createRisorsaDto: CreateRisorsaDto) {
+    const { condominioId, ...rest } = createRisorsaDto;
     const data: Prisma.RisorsaCreateInput = {
-      ...createRisorsaDto,
+      ...rest,
       condominio: {
-        connect: { id: createRisorsaDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.risorsa.create({ data });
@@ -30,10 +31,11 @@ export class RisorseService {
   }
 
   update(id: number, updateRisorsaDto: UpdateRisorsaDto) {
+    const { condominioId, ...rest } = updateRisorsaDto;
     const data: Prisma.RisorsaUpdateInput = {
-      ...updateRisorsaDto,
+      ...rest,
       condominio: {
-        connect: { id: updateRisorsaDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.risorsa.update({

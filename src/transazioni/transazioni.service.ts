@@ -10,14 +10,13 @@ export class TransazioniService {
   constructor(private prisma: PrismaService) {}
 
   create(createTransazioneDto: CreateTransazioneDto) {
+    const { condominioId, unitaImmobiliareId, risorsaId, fondoId, ...rest } = createTransazioneDto;
     const data: Prisma.TransazioneCreateInput = {
-      ...createTransazioneDto,
-      condominio: { connect: { id: createTransazioneDto.condominioId } },
-      unitaImmobiliare: createTransazioneDto.unitaImmobiliareId
-        ? { connect: { id: createTransazioneDto.unitaImmobiliareId } }
-        : undefined,
-      risorsa: { connect: { id: createTransazioneDto.risorsaId } },
-      fondo: createTransazioneDto.fondoId ? { connect: { id: createTransazioneDto.fondoId } } : undefined,
+      ...rest,
+      condominio: { connect: { id: condominioId } },
+      unitaImmobiliare: unitaImmobiliareId ? { connect: { id: unitaImmobiliareId } } : undefined,
+      risorsa: { connect: { id: risorsaId } },
+      fondo: fondoId ? { connect: { id: fondoId } } : undefined,
     };
     return this.prisma.transazione.create({ data });
   }
@@ -33,14 +32,13 @@ export class TransazioniService {
   }
 
   update(id: number, updateTransazioneDto: UpdateTransazioneDto) {
+    const { condominioId, unitaImmobiliareId, risorsaId, fondoId, ...rest } = updateTransazioneDto;
     const data: Prisma.TransazioneUpdateInput = {
-      ...updateTransazioneDto,
-      condominio: { connect: { id: updateTransazioneDto.condominioId } },
-      unitaImmobiliare: updateTransazioneDto.unitaImmobiliareId
-        ? { connect: { id: updateTransazioneDto.unitaImmobiliareId } }
-        : undefined,
-      risorsa: { connect: { id: updateTransazioneDto.risorsaId } },
-      fondo: updateTransazioneDto.fondoId ? { connect: { id: updateTransazioneDto.fondoId } } : undefined,
+      ...rest,
+      condominio: { connect: { id: condominioId } },
+      unitaImmobiliare: unitaImmobiliareId ? { connect: { id: unitaImmobiliareId } } : undefined,
+      risorsa: { connect: { id: risorsaId } },
+      fondo: fondoId ? { connect: { id: fondoId } } : undefined,
     };
     return this.prisma.transazione.update({
       where: { id },

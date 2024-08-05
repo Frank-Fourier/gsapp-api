@@ -10,10 +10,11 @@ export class FondiService {
   constructor(private prisma: PrismaService) {}
 
   create(createFondoDto: CreateFondoDto) {
+    const { condominioId, ...rest } = createFondoDto;
     const data: Prisma.FondoCreateInput = {
-      ...createFondoDto,
+      ...rest,
       condominio: {
-        connect: { id: createFondoDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.fondo.create({ data });
@@ -30,10 +31,11 @@ export class FondiService {
   }
 
   update(id: number, updateFondoDto: UpdateFondoDto) {
+    const { condominioId, ...rest } = updateFondoDto;
     const data: Prisma.FondoUpdateInput = {
-      ...updateFondoDto,
+      ...rest,
       condominio: {
-        connect: { id: updateFondoDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.fondo.update({

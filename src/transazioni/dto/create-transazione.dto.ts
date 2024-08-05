@@ -1,9 +1,11 @@
 // src/transazione/dto/create-transazione.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsNumber, IsDate, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';  // Import Type decorator
 
 export class CreateTransazioneDto {
   @IsDate()
+  @Type(() => Date)  // Use Type decorator to transform the string to Date
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   data: Date;

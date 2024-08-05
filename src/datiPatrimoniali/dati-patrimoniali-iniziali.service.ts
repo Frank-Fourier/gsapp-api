@@ -10,9 +10,10 @@ export class DatiPatrimonialiInizialiService {
   constructor(private prisma: PrismaService) {}
 
   create(createDatiPatrimonialiInizialiDto: CreateDatiPatrimonialiInizialiDto) {
+    const { condominioId, ...rest } = createDatiPatrimonialiInizialiDto;
     const data: Prisma.DatiPatrimonialiInizialiCreateInput = {
-      ...createDatiPatrimonialiInizialiDto,
-      condominio: { connect: { id: createDatiPatrimonialiInizialiDto.condominioId } },
+      ...rest,
+      condominio: { connect: { id: condominioId } },
     };
     return this.prisma.datiPatrimonialiIniziali.create({ data });
   }
@@ -28,9 +29,10 @@ export class DatiPatrimonialiInizialiService {
   }
 
   update(id: number, updateDatiPatrimonialiInizialiDto: UpdateDatiPatrimonialiInizialiDto) {
+    const { condominioId, ...rest } = updateDatiPatrimonialiInizialiDto;
     const data: Prisma.DatiPatrimonialiInizialiUpdateInput = {
-      ...updateDatiPatrimonialiInizialiDto,
-      condominio: { connect: { id: updateDatiPatrimonialiInizialiDto.condominioId } },
+      ...rest,
+      condominio: { connect: { id: condominioId } },
     };
     return this.prisma.datiPatrimonialiIniziali.update({
       where: { id },
