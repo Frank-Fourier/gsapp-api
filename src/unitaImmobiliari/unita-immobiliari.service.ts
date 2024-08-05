@@ -10,10 +10,11 @@ export class UnitaImmobiliariService {
   constructor(private prisma: PrismaService) {}
 
   create(createUnitaImmobiliareDto: CreateUnitaImmobiliareDto) {
+    const { condominioId, ...rest } = createUnitaImmobiliareDto;
     const data: Prisma.UnitaImmobiliareCreateInput = {
-      ...createUnitaImmobiliareDto,
+      ...rest,
       condominio: {
-        connect: { id: createUnitaImmobiliareDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.unitaImmobiliare.create({ data });
@@ -30,10 +31,11 @@ export class UnitaImmobiliariService {
   }
 
   update(id: number, updateUnitaImmobiliareDto: UpdateUnitaImmobiliareDto) {
+    const { condominioId, ...rest } = updateUnitaImmobiliareDto;
     const data: Prisma.UnitaImmobiliareUpdateInput = {
-      ...updateUnitaImmobiliareDto,
+      ...rest,
       condominio: {
-        connect: { id: updateUnitaImmobiliareDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.unitaImmobiliare.update({

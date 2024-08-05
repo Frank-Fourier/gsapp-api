@@ -10,10 +10,11 @@ export class TabelleService {
   constructor(private prisma: PrismaService) {}
 
   create(createTabellaDto: CreateTabellaDto) {
+    const { condominioId, ...rest } = createTabellaDto;
     const data: Prisma.TabellaCreateInput = {
-      ...createTabellaDto,
+      ...rest,
       condominio: {
-        connect: { id: createTabellaDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.tabella.create({ data });
@@ -30,10 +31,11 @@ export class TabelleService {
   }
 
   update(id: number, updateTabellaDto: UpdateTabellaDto) {
+    const { condominioId, ...rest } = updateTabellaDto;
     const data: Prisma.TabellaUpdateInput = {
-      ...updateTabellaDto,
+      ...rest,
       condominio: {
-        connect: { id: updateTabellaDto.condominioId },
+        connect: { id: condominioId },
       },
     };
     return this.prisma.tabella.update({

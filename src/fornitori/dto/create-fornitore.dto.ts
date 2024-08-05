@@ -1,6 +1,7 @@
 // src/fornitori/dto/create-fornitore.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsEmail, IsOptional, MaxLength, IsDate, IsEnum, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';  // Import Type decorator
 import { TipologiaAnagrafica, TipologiaCassa, TipologiaIVA, TipologiaRitenuta, CausaliSomme } from '@prisma/client';
 
 export class CreateFornitoreDto {
@@ -114,6 +115,7 @@ export class CreateFornitoreDto {
   capSedeLegale: string;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   dataNascita: Date;

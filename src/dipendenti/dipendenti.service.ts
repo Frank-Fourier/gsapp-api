@@ -10,10 +10,11 @@ export class DipendentiService {
   constructor(private prisma: PrismaService) {}
 
   create(createDipendenteDto: CreateDipendenteDto) {
+    const { amministratoreId, ...rest } = createDipendenteDto;
     const data: Prisma.DipendenteCreateInput = {
-      ...createDipendenteDto,
+      ...rest,
       amministratore: {
-        connect: { id: createDipendenteDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.dipendente.create({ data });
@@ -30,10 +31,11 @@ export class DipendentiService {
   }
 
   update(id: number, updateDipendenteDto: UpdateDipendenteDto) {
+    const { amministratoreId, ...rest } = updateDipendenteDto;
     const data: Prisma.DipendenteUpdateInput = {
-      ...updateDipendenteDto,
+      ...rest,
       amministratore: {
-        connect: { id: updateDipendenteDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.dipendente.update({

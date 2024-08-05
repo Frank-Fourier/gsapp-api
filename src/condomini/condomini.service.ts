@@ -10,10 +10,11 @@ export class CondominiService {
   constructor(private prisma: PrismaService) {}
 
   create(createCondominioDto: CreateCondominioDto) {
+    const { amministratoreId, ...rest } = createCondominioDto;
     const data: Prisma.CondominioCreateInput = {
-      ...createCondominioDto,
+      ...rest,
       amministratore: {
-        connect: { id: createCondominioDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.condominio.create({ data });
@@ -30,10 +31,11 @@ export class CondominiService {
   }
 
   update(id: number, updateCondominioDto: UpdateCondominioDto) {
+    const { amministratoreId, ...rest } = updateCondominioDto;
     const data: Prisma.CondominioUpdateInput = {
-      ...updateCondominioDto,
+      ...rest,
       amministratore: {
-        connect: { id: updateCondominioDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.condominio.update({

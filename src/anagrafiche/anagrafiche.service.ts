@@ -1,4 +1,3 @@
-// src/anagrafiche/anagrafiche.service.ts
 import { Injectable } from '@nestjs/common';
 import { CreateAnagraficaDto } from './dto/create-anagrafica.dto';
 import { UpdateAnagraficaDto } from './dto/update-anagrafica.dto';
@@ -10,10 +9,11 @@ export class AnagraficheService {
   constructor(private prisma: PrismaService) {}
 
   create(createAnagraficaDto: CreateAnagraficaDto) {
+    const { amministratoreId, ...rest } = createAnagraficaDto;
     const data: Prisma.AnagraficaCreateInput = {
-      ...createAnagraficaDto,
+      ...rest,
       amministratore: {
-        connect: { id: createAnagraficaDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.anagrafica.create({ data });
@@ -30,10 +30,11 @@ export class AnagraficheService {
   }
 
   update(id: number, updateAnagraficaDto: UpdateAnagraficaDto) {
+    const { amministratoreId, ...rest } = updateAnagraficaDto;
     const data: Prisma.AnagraficaUpdateInput = {
-      ...updateAnagraficaDto,
+      ...rest,
       amministratore: {
-        connect: { id: updateAnagraficaDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.anagrafica.update({

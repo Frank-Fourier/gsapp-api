@@ -1,6 +1,7 @@
 // src/condomini/dto/create-condominio.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsOptional, IsInt, IsDate, MaxLength, IsEnum, IsArray, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';  // Import Type decorator
 import { TipologiaCondominio } from '@prisma/client';
 
 export class CreateCondominioDto {
@@ -105,6 +106,7 @@ export class CreateCondominioDto {
   allegati: string[];
 
   @IsDate()
+  @Type(() => Date)  // Use Type decorator to transform the string to Date
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   dataPresaInCarico: Date;

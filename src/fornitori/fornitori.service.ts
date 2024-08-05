@@ -10,10 +10,11 @@ export class FornitoriService {
   constructor(private prisma: PrismaService) {}
 
   create(createFornitoreDto: CreateFornitoreDto) {
+    const { amministratoreId, ...rest } = createFornitoreDto;
     const data: Prisma.FornitoreCreateInput = {
-      ...createFornitoreDto,
+      ...rest,
       amministratore: {
-        connect: { id: createFornitoreDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.fornitore.create({ data });
@@ -30,10 +31,11 @@ export class FornitoriService {
   }
 
   update(id: number, updateFornitoreDto: UpdateFornitoreDto) {
+    const { amministratoreId, ...rest } = updateFornitoreDto;
     const data: Prisma.FornitoreUpdateInput = {
-      ...updateFornitoreDto,
+      ...rest,
       amministratore: {
-        connect: { id: updateFornitoreDto.amministratoreId },
+        connect: { id: amministratoreId },
       },
     };
     return this.prisma.fornitore.update({
