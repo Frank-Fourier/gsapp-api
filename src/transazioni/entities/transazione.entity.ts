@@ -15,20 +15,26 @@ export class TransazioneEntity implements Transazione {
   @ApiProperty({ required: false })
   descrizione: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  note: string;
+
+  @ApiProperty({ required: false })
   riferimento: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   provenienzaFornitore: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   provenienzaAnagrafica: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   destinazioneFornitore: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   destinazioneAnagrafica: string;
+
+  @ApiProperty({ required: false })
+  gestioneId: number;
 
   @ApiProperty()
   condominioId: number;
@@ -41,6 +47,9 @@ export class TransazioneEntity implements Transazione {
 
   @ApiProperty({ required: false })
   fondoId: number;
+
+  @ApiProperty({ required: false })
+  movimentoId: number;
 
   @ApiProperty()
   createdAt: Date;

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEmail, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, IsArray, IsBoolean } from 'class-validator';
 
 export class CreateProfiloAmministratoreDto {
   @IsString()
@@ -36,4 +36,9 @@ export class CreateProfiloAmministratoreDto {
   @IsNotEmpty()
   @ApiProperty()
   logo: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty()
+  stato: boolean;
 }

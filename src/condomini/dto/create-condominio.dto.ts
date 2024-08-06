@@ -1,6 +1,6 @@
 // src/condomini/dto/create-condominio.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsInt, IsDate, MaxLength, IsEnum, IsArray, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt, IsDate, IsEnum, IsArray, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';  // Import Type decorator
 import { TipologiaCondominio } from '@prisma/client';
 
@@ -100,6 +100,11 @@ export class CreateCondominioDto {
   @ApiProperty({ required: false })
   descrizione: string;
 
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  note: string;
+
   @IsArray()
   @IsOptional()
   @ApiProperty({ type: [String], required: false })
@@ -110,6 +115,11 @@ export class CreateCondominioDto {
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   dataPresaInCarico: Date;
+
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  dataFineInCarico: Date;
 
   @IsInt()
   @IsNotEmpty()

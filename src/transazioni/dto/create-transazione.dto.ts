@@ -1,11 +1,11 @@
 // src/transazione/dto/create-transazione.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsNumber, IsDate, IsInt } from 'class-validator';
-import { Type } from 'class-transformer';  // Import Type decorator
+import { Type } from 'class-transformer';
 
 export class CreateTransazioneDto {
   @IsDate()
-  @Type(() => Date)  // Use Type decorator to transform the string to Date
+  @Type(() => Date)
   @IsNotEmpty()
   @ApiProperty({ type: String, format: 'date-time' })
   data: Date;
@@ -21,29 +21,39 @@ export class CreateTransazioneDto {
   descrizione?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  riferimento: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  note?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  provenienzaFornitore: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  riferimento?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  provenienzaAnagrafica: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  provenienzaFornitore?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  destinazioneFornitore: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  provenienzaAnagrafica?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  destinazioneAnagrafica: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  destinazioneFornitore?: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  destinazioneAnagrafica?: string;
+
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  gestioneId?: number;
 
   @IsInt()
   @IsNotEmpty()
@@ -64,4 +74,9 @@ export class CreateTransazioneDto {
   @IsOptional()
   @ApiProperty({ required: false })
   fondoId?: number;
+
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  movimentoId?: number;
 }

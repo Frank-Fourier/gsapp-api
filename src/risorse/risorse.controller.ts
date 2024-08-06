@@ -14,7 +14,7 @@ import { RisorseService } from './risorse.service';
 import { CreateRisorsaDto } from './dto/create-risorsa.dto';
 import { UpdateRisorsaDto } from './dto/update-risorsa.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { RisorsaEntity, RisorsaWithTransazioniEntity } from './entities/risorsa.entity';
+import { RisorsaEntity, RisorsaWithTransazioniEntity, RisorsaWithDetailsEntity } from './entities/risorsa.entity';
 
 @Controller('risorse')
 @ApiTags('risorse')
@@ -52,6 +52,16 @@ export class RisorseController {
       throw new NotFoundException(`Risorsa with ID ${id} does not exist.`);
     }
     return new RisorsaWithTransazioniEntity(risorsa);
+  }
+
+  @Get(':id/dettagli')
+  @ApiOkResponse({ type: RisorsaWithDetailsEntity })
+  async findOneWithDetails(@Param('id', ParseIntPipe) id: number) {
+    const risorsa = await this.risorseService.findOneWithDetails(id);
+    if (!risorsa) {
+      throw new NotFoundException(`Risorsa with ID ${id} does not exist.`);
+    }
+    return new RisorsaWithDetailsEntity(risorsa);
   }
 
   @Patch(':id')

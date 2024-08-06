@@ -33,7 +33,17 @@ export class RisorseService {
   findOneWithTransazioni(id: number) {
     return this.prisma.risorsa.findUnique({
       where: { id },
-      include: { transazioni: true }, // Include related transazioni
+      include: { transazioni: true },
+    });
+  }
+
+  findOneWithDetails(id: number) {
+    return this.prisma.risorsa.findUnique({
+      where: { id },
+      include: {
+        transazioni: true,
+        estrattiConto: true,
+      },
     });
   }
 

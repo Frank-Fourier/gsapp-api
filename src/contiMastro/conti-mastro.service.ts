@@ -10,11 +10,14 @@ export class ContiMastroService {
   constructor(private prisma: PrismaService) {}
 
   create(createContoMastroDto: CreateContoMastroDto) {
-    const { condominioId, ...rest } = createContoMastroDto;
+    const { condominioId, tabellaId, ...rest } = createContoMastroDto;
     const data: Prisma.ContoMastroCreateInput = {
       ...rest,
       condominio: {
         connect: { id: condominioId },
+      },
+      tabella: {
+        connect: { id: tabellaId },
       },
     };
     return this.prisma.contoMastro.create({ data });
@@ -30,12 +33,24 @@ export class ContiMastroService {
     });
   }
 
+  findOneWithDetails(id: number) {
+    return this.prisma.contoMastro.findUnique({
+      where: { id },
+      include: {
+        preventivi: true,
+      },
+    });
+  }
+
   update(id: number, updateContoMastroDto: UpdateContoMastroDto) {
-    const { condominioId, ...rest } = updateContoMastroDto;
+    const { condominioId, tabellaId, ...rest } = updateContoMastroDto;
     const data: Prisma.ContoMastroUpdateInput = {
       ...rest,
       condominio: {
         connect: { id: condominioId },
+      },
+      tabella: {
+        connect: { id: tabellaId },
       },
     };
     return this.prisma.contoMastro.update({

@@ -31,6 +31,9 @@ export class ProfiloAmministratoreEntity implements ProfiloAmministratore {
   logo: string;
 
   @ApiProperty()
+  stato: boolean;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

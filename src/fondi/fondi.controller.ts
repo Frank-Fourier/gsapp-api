@@ -14,7 +14,7 @@ import {
   import { CreateFondoDto } from './dto/create-fondo.dto';
   import { UpdateFondoDto } from './dto/update-fondo.dto';
   import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-  import { FondoEntity, FondoWithTransazioniEntity } from './entities/fondo.entity';
+  import { FondoEntity, FondoWithTransazioniEntity, FondoWithDetailsEntity } from './entities/fondo.entity';
   
   @Controller('fondi')
   @ApiTags('fondi')
@@ -53,6 +53,16 @@ import {
       }
       return new FondoWithTransazioniEntity(fondo);
     }
+
+    @Get(':id/dettagli')
+  @ApiOkResponse({ type: FondoWithDetailsEntity })
+  async findOneWithDetails(@Param('id', ParseIntPipe) id: number) {
+    const risorsa = await this.fondiService.findOneWithDetails(id);
+    if (!risorsa) {
+      throw new NotFoundException(`Risorsa with ID ${id} does not exist.`);
+    }
+    return new FondoWithDetailsEntity(risorsa);
+  }
   
     @Patch(':id')
     @ApiCreatedResponse({ type: FondoEntity })

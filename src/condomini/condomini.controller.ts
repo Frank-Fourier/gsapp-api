@@ -19,7 +19,7 @@ import { CondominioEntity, CondominioWithRelationsEntity } from './entities/cond
 @Controller('condomini')
 @ApiTags('condomini')
 export class CondominiController {
-  constructor(private readonly condominiService: CondominiService) {}
+  constructor(private readonly condominiService: CondominiService) { }
 
   @Post()
   @ApiCreatedResponse({ type: CondominioEntity })
@@ -46,15 +46,15 @@ export class CondominiController {
     return new CondominioEntity(condominio);
   }
 
-@Get(':id/dettagli')
-@ApiOkResponse({ type: CondominioWithRelationsEntity })
-async findOneWithRelations(@Param('id', ParseIntPipe) id: number) {
-  const condominio = await this.condominiService.findOneWithRelations(id);
-  if (!condominio) {
-    throw new NotFoundException(`Condominio with ID ${id} does not exist.`);
+  @Get(':id/dettagli')
+  @ApiOkResponse({ type: CondominioWithRelationsEntity })
+  async findOneWithRelations(@Param('id', ParseIntPipe) id: number) {
+    const condominio = await this.condominiService.findOneWithRelations(id);
+    if (!condominio) {
+      throw new NotFoundException(`Condominio with ID ${id} does not exist.`);
+    }
+    return new CondominioWithRelationsEntity(condominio);
   }
-  return new CondominioWithRelationsEntity(condominio);
-}
 
   @Patch(':id')
   @ApiCreatedResponse({ type: CondominioEntity })

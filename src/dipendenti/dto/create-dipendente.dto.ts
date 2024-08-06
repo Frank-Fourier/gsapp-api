@@ -53,23 +53,23 @@ export class CreateDipendenteDto {
   capResidenza: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   nazioneDomicilio: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   comuneDomicilio: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   indirizzoDomicilio: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   capDomicilio: string;
 
   @IsDate()

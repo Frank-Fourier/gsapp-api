@@ -29,6 +29,9 @@ export class UnitaImmobiliareEntity implements UnitaImmobiliare {
   interno: string;
 
   @ApiProperty({ required: false })
+  descrizione: string;
+
+  @ApiProperty({ required: false })
   note: string;
 
   @ApiProperty({ type: [String], required: false })
@@ -51,6 +54,12 @@ export class UnitaImmobiliareEntity implements UnitaImmobiliare {
 
   @ApiProperty({ type: [String], required: false })
   conduttorePrecedente: string[];
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  dataDiAttivazione: Date;
+
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  dataDiDisattivazione: Date;
 
   @ApiProperty()
   condominioId: number;

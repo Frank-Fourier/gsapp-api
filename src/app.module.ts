@@ -13,8 +13,11 @@ import { ContiMastroModule } from './contiMastro/conti-mastro.module';
 import { RisorseModule } from './risorse/risorse.module';
 import { FondiModule } from './fondi/fondi.module';
 import { TransazioniModule } from './transazioni/transazioni.module';
-import { DatiPatrimonialiInizialiModule } from './datiPatrimoniali/dati-patrimoniali-iniziali.module';
 import { ApiModule } from './services/api.module';
+import { EstrattiContoModule } from './estrattiConto/estratti-conto.module';
+import { GestioniModule } from './gestioni/gestioni.module';
+import { PreventiviModule } from './preventivi/preventivi.module';
+import { MovimentiModule } from './movimenti/movimenti.module';
 
 @Module({
   imports: [
@@ -30,8 +33,11 @@ import { ApiModule } from './services/api.module';
     RisorseModule,
     FondiModule,
     TransazioniModule,
-    DatiPatrimonialiInizialiModule,
     ApiModule,
+    EstrattiContoModule,
+    GestioniModule, 
+    PreventiviModule,
+    MovimentiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

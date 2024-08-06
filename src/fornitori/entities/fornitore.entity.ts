@@ -1,6 +1,7 @@
 // src/fornitori/entities/fornitore.entity.ts
-import { Fornitore, TipologiaAnagrafica, TipologiaCassa, TipologiaIVA, TipologiaRitenuta, CausaliSomme } from '@prisma/client';
+import { Fornitore } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { TipologiaAnagrafica, TipologiaCassa, TipologiaIVA, TipologiaRitenuta, CausaliSomme } from '@prisma/client';
 
 export class FornitoreEntity implements Fornitore {
   @ApiProperty()
@@ -22,7 +23,7 @@ export class FornitoreEntity implements Fornitore {
   cognome: string;
 
   @ApiProperty({ required: false })
-  ragioneSociale: string; // se societa
+  ragioneSociale: string;
 
   @ApiProperty({ required: false })
   responsabile: string;
@@ -45,16 +46,16 @@ export class FornitoreEntity implements Fornitore {
   @ApiProperty()
   capResidenza: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   nazioneDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   comuneDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   indirizzoDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   capDomicilio: string;
 
   @ApiProperty()
@@ -96,7 +97,7 @@ export class FornitoreEntity implements Fornitore {
   @ApiProperty({ required: false })
   inps: string;
 
-  @ApiProperty({ enum: TipologiaIVA, required: false })
+  @ApiProperty({ enum: TipologiaIVA, required: false, default: TipologiaIVA.ZERO })
   iva1: TipologiaIVA;
 
   @ApiProperty({ enum: TipologiaIVA, required: false })

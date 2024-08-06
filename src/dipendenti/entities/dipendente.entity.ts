@@ -33,16 +33,16 @@ export class DipendenteEntity implements Dipendente {
   @ApiProperty()
   capResidenza: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   nazioneDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   comuneDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   indirizzoDomicilio: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   capDomicilio: string;
 
   @ApiProperty({ type: String, format: 'date-time' })

@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CondominiService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   create(createCondominioDto: CreateCondominioDto) {
     const { amministratoreId, ...rest } = createCondominioDto;
@@ -34,13 +34,13 @@ export class CondominiService {
     return this.prisma.condominio.findUnique({
       where: { id },
       include: {
-        datiPatrimonialiIniziali: true,
         unitaImmobiliari: true,
         tabelle: true,
         contiMastro: true,
         risorse: true,
         fondi: true,
         transazioni: true,
+        movimenti: true,
         gestioni: true,
       },
     });

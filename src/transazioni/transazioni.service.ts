@@ -10,13 +10,19 @@ export class TransazioniService {
   constructor(private prisma: PrismaService) {}
 
   create(createTransazioneDto: CreateTransazioneDto) {
-    const { condominioId, unitaImmobiliareId, risorsaId, fondoId, ...rest } = createTransazioneDto;
+    const { condominioId, risorsaId, gestioneId, unitaImmobiliareId, fondoId, movimentoId, ...rest } = createTransazioneDto;
     const data: Prisma.TransazioneCreateInput = {
       ...rest,
-      condominio: { connect: { id: condominioId } },
+      condominio: {
+        connect: { id: condominioId },
+      },
+      risorsa: {
+        connect: { id: risorsaId },
+      },
+      gestione: gestioneId ? { connect: { id: gestioneId } } : undefined,
       unitaImmobiliare: unitaImmobiliareId ? { connect: { id: unitaImmobiliareId } } : undefined,
-      risorsa: { connect: { id: risorsaId } },
       fondo: fondoId ? { connect: { id: fondoId } } : undefined,
+      movimento: movimentoId ? { connect: { id: movimentoId } } : undefined,
     };
     return this.prisma.transazione.create({ data });
   }
@@ -32,13 +38,19 @@ export class TransazioniService {
   }
 
   update(id: number, updateTransazioneDto: UpdateTransazioneDto) {
-    const { condominioId, unitaImmobiliareId, risorsaId, fondoId, ...rest } = updateTransazioneDto;
+    const { condominioId, risorsaId, gestioneId, unitaImmobiliareId, fondoId, movimentoId, ...rest } = updateTransazioneDto;
     const data: Prisma.TransazioneUpdateInput = {
       ...rest,
-      condominio: { connect: { id: condominioId } },
+      condominio: {
+        connect: { id: condominioId },
+      },
+      risorsa: {
+        connect: { id: risorsaId },
+      },
+      gestione: gestioneId ? { connect: { id: gestioneId } } : undefined,
       unitaImmobiliare: unitaImmobiliareId ? { connect: { id: unitaImmobiliareId } } : undefined,
-      risorsa: { connect: { id: risorsaId } },
       fondo: fondoId ? { connect: { id: fondoId } } : undefined,
+      movimento: movimentoId ? { connect: { id: movimentoId } } : undefined,
     };
     return this.prisma.transazione.update({
       where: { id },
@@ -47,6 +59,8 @@ export class TransazioniService {
   }
 
   remove(id: number) {
-    return this.prisma.transazione.delete({ where: { id } });
+    return this.prisma.transazione.delete({
+      where: { id },
+    });
   }
 }

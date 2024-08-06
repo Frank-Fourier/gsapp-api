@@ -25,6 +25,9 @@ CREATE TYPE "TipologiaFondo" AS ENUM ('CASSA', 'SPECIALI', 'TFR');
 -- CreateEnum
 CREATE TYPE "TipologiaGestione" AS ENUM ('ORDINARIA', 'STRAORDINARIA', 'UTENZE_PRIVATE');
 
+-- CreateEnum
+CREATE TYPE "TipologiaMovimento" AS ENUM ('DEBITO', 'CREDITO');
+
 -- CreateTable
 CREATE TABLE "ProfiloAmministratore" (
     "id" SERIAL NOT NULL,
@@ -35,6 +38,7 @@ CREATE TABLE "ProfiloAmministratore" (
     "documenti" TEXT[],
     "allegati" TEXT[],
     "logo" TEXT NOT NULL,
+    "stato" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -57,10 +61,10 @@ CREATE TABLE "Anagrafica" (
     "comuneResidenza" TEXT NOT NULL,
     "indirizzoResidenza" TEXT NOT NULL,
     "capResidenza" TEXT NOT NULL,
-    "nazioneDomicilio" TEXT NOT NULL,
-    "comuneDomicilio" TEXT NOT NULL,
-    "indirizzoDomicilio" TEXT NOT NULL,
-    "capDomicilio" TEXT NOT NULL,
+    "nazioneDomicilio" TEXT,
+    "comuneDomicilio" TEXT,
+    "indirizzoDomicilio" TEXT,
+    "capDomicilio" TEXT,
     "dataNascita" TIMESTAMP(3) NOT NULL,
     "luogoNascita" TEXT NOT NULL,
     "telefono" TEXT NOT NULL,
@@ -91,10 +95,10 @@ CREATE TABLE "Fornitore" (
     "comuneResidenza" TEXT NOT NULL,
     "indirizzoResidenza" TEXT NOT NULL,
     "capResidenza" TEXT NOT NULL,
-    "nazioneDomicilio" TEXT NOT NULL,
-    "comuneDomicilio" TEXT NOT NULL,
-    "indirizzoDomicilio" TEXT NOT NULL,
-    "capDomicilio" TEXT NOT NULL,
+    "nazioneDomicilio" TEXT,
+    "comuneDomicilio" TEXT,
+    "indirizzoDomicilio" TEXT,
+    "capDomicilio" TEXT,
     "nazioneSedeLegale" TEXT NOT NULL,
     "comuneSedeLegale" TEXT NOT NULL,
     "indirizzoSedeLegale" TEXT NOT NULL,
@@ -137,10 +141,10 @@ CREATE TABLE "Dipendente" (
     "comuneResidenza" TEXT NOT NULL,
     "indirizzoResidenza" TEXT NOT NULL,
     "capResidenza" TEXT NOT NULL,
-    "nazioneDomicilio" TEXT NOT NULL,
-    "comuneDomicilio" TEXT NOT NULL,
-    "indirizzoDomicilio" TEXT NOT NULL,
-    "capDomicilio" TEXT NOT NULL,
+    "nazioneDomicilio" TEXT,
+    "comuneDomicilio" TEXT,
+    "indirizzoDomicilio" TEXT,
+    "capDomicilio" TEXT,
     "dataNascita" TIMESTAMP(3) NOT NULL,
     "luogoNascita" TEXT NOT NULL,
     "telefono" TEXT NOT NULL,
@@ -179,9 +183,11 @@ CREATE TABLE "Condominio" (
     "luogoAssemblea1" TEXT NOT NULL,
     "luogoAssemblea2" TEXT NOT NULL,
     "decimaliMillesimi" INTEGER NOT NULL,
-    "descrizione" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
     "allegati" TEXT[],
     "dataPresaInCarico" TIMESTAMP(3) NOT NULL,
+    "dataFineInCarico" TIMESTAMP(3),
     "amministratoreId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -199,7 +205,8 @@ CREATE TABLE "UnitaImmobiliare" (
     "scala" TEXT NOT NULL,
     "piano" TEXT NOT NULL,
     "interno" TEXT NOT NULL,
-    "note" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
     "nudaProprietaAttiva" TEXT[],
     "usufruttoAttivo" TEXT[],
     "proprietarioAttivo" TEXT[],
@@ -207,6 +214,8 @@ CREATE TABLE "UnitaImmobiliare" (
     "usufruttoPrecendente" TEXT[],
     "proprietarioPrecedente" TEXT[],
     "conduttorePrecedente" TEXT[],
+    "dataDiAttivazione" TIMESTAMP(3) NOT NULL,
+    "dataDiDisattivazione" TIMESTAMP(3),
     "condominioId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -224,7 +233,9 @@ CREATE TABLE "Tabella" (
     "percentualeUsufrutto" TEXT[],
     "percentualeProprieta" TEXT[],
     "percentualeConduttore" TEXT[],
-    "descrizione" TEXT NOT NULL,
+    "dataArchiviazione" TIMESTAMP(3),
+    "descrizione" TEXT,
+    "note" TEXT,
     "condominioId" INTEGER NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -235,10 +246,12 @@ CREATE TABLE "Tabella" (
 -- CreateTable
 CREATE TABLE "ContoMastro" (
     "id" SERIAL NOT NULL,
-    "descrizione" TEXT NOT NULL,
-    "note" TEXT NOT NULL,
+    "denominazione" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
     "tabellaId" INTEGER NOT NULL,
     "conti" TEXT[],
+    "dataArchiviazione" TIMESTAMP(3),
     "condominioId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -251,12 +264,13 @@ CREATE TABLE "Risorsa" (
     "id" SERIAL NOT NULL,
     "saldo" DOUBLE PRECISION NOT NULL,
     "denominazione" TEXT NOT NULL,
-    "descrizione" TEXT NOT NULL,
+    "descrizione" TEXT,
     "istitutoCredito" TEXT NOT NULL,
     "agenzia" TEXT,
     "iban" TEXT,
     "codiceBIC" TEXT,
     "note" TEXT,
+    "dataArchiviazione" TIMESTAMP(3),
     "condominioId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -270,7 +284,9 @@ CREATE TABLE "Fondo" (
     "saldo" DOUBLE PRECISION NOT NULL,
     "tipologia" "TipologiaFondo" NOT NULL,
     "denominazione" TEXT NOT NULL,
-    "descrizione" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
+    "dataArchiviazione" TIMESTAMP(3),
     "condominioId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -279,16 +295,35 @@ CREATE TABLE "Fondo" (
 );
 
 -- CreateTable
+CREATE TABLE "EstrattoConto" (
+    "id" SERIAL NOT NULL,
+    "saldo" DOUBLE PRECISION NOT NULL,
+    "denominazione" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
+    "transazioni" TEXT[],
+    "risorsaId" INTEGER,
+    "fondoId" INTEGER,
+    "gestioneId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "EstrattoConto_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Transazione" (
     "id" SERIAL NOT NULL,
     "data" TIMESTAMP(3) NOT NULL,
     "importo" DOUBLE PRECISION NOT NULL,
     "descrizione" TEXT,
-    "riferimento" TEXT NOT NULL,
-    "provenienzaFornitore" TEXT NOT NULL,
-    "provenienzaAnagrafica" TEXT NOT NULL,
-    "destinazioneFornitore" TEXT NOT NULL,
-    "destinazioneAnagrafica" TEXT NOT NULL,
+    "note" TEXT,
+    "riferimento" TEXT,
+    "provenienzaFornitore" TEXT,
+    "provenienzaAnagrafica" TEXT,
+    "destinazioneFornitore" TEXT,
+    "destinazioneAnagrafica" TEXT,
+    "gestioneId" INTEGER,
     "condominioId" INTEGER NOT NULL,
     "unitaImmobiliareId" INTEGER,
     "risorsaId" INTEGER NOT NULL,
@@ -300,42 +335,39 @@ CREATE TABLE "Transazione" (
 );
 
 -- CreateTable
-CREATE TABLE "DatiPatrimonialiIniziali" (
+CREATE TABLE "Movimento" (
     "id" SERIAL NOT NULL,
-    "debitiUnitaImmobiliari" INTEGER[],
-    "debitiDettaglio" TEXT[],
-    "creditiUnitaImmobiliari" INTEGER[],
-    "dettaglioUnitaImmobiliare" TEXT[],
-    "debitiFornitori" INTEGER[],
-    "dettaglioFornitori" TEXT[],
-    "fornitoriCrediti" INTEGER[],
-    "dettaglioFornitoriCrediti" TEXT[],
-    "risorseGestione" TEXT[],
-    "saldoRisorse" DOUBLE PRECISION[],
-    "fondiGestione" TEXT[],
-    "consistenzaFondo" DOUBLE PRECISION[],
-    "descrizione" TEXT NOT NULL,
+    "tipologia" "TipologiaMovimento" NOT NULL,
+    "dataScadenza" TIMESTAMP(3) NOT NULL,
+    "dataEmissione" TIMESTAMP(3) NOT NULL,
+    "dataPagamento" TIMESTAMP(3),
+    "ritenuta" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "importo" DOUBLE PRECISION NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
+    "risorsaId" INTEGER,
+    "unitaImmobiliareId" INTEGER,
+    "fornitoreId" INTEGER,
+    "dipendenteId" INTEGER,
+    "transazioneId" INTEGER,
     "condominioId" INTEGER NOT NULL,
+    "gestioneMovimentoId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "DatiPatrimonialiIniziali_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Movimento_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Gestione" (
     "id" SERIAL NOT NULL,
+    "gestionePrecedenteId" INTEGER,
     "tipologia" "TipologiaGestione" NOT NULL,
-    "debitiUnitaImmobiliari" INTEGER[],
-    "debitiDettaglio" TEXT[],
-    "creditiUnitaImmobiliari" INTEGER[],
-    "dettaglioUnitaImmobiliare" TEXT[],
-    "debitiFornitori" INTEGER[],
-    "dettaglioFornitori" TEXT[],
-    "fornitoriCrediti" INTEGER[],
-    "dettaglioFornitoriCrediti" TEXT[],
+    "dataInizioGestione" TIMESTAMP(3) NOT NULL,
+    "dataFineGestione" TIMESTAMP(3),
     "denominazione" TEXT NOT NULL,
-    "descrizione" TEXT NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
     "condominioId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -343,11 +375,23 @@ CREATE TABLE "Gestione" (
     CONSTRAINT "Gestione_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "Condominio_codice_key" ON "Condominio"("codice");
+-- CreateTable
+CREATE TABLE "Preventivo" (
+    "id" SERIAL NOT NULL,
+    "gestioneId" INTEGER NOT NULL,
+    "contoMastroId" INTEGER NOT NULL,
+    "importo" DOUBLE PRECISION NOT NULL,
+    "numeroRate" INTEGER NOT NULL,
+    "descrizione" TEXT,
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Preventivo_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DatiPatrimonialiIniziali_condominioId_key" ON "DatiPatrimonialiIniziali"("condominioId");
+CREATE UNIQUE INDEX "Condominio_codice_key" ON "Condominio"("codice");
 
 -- AddForeignKey
 ALTER TABLE "Anagrafica" ADD CONSTRAINT "Anagrafica_amministratoreId_fkey" FOREIGN KEY ("amministratoreId") REFERENCES "ProfiloAmministratore"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -368,6 +412,9 @@ ALTER TABLE "UnitaImmobiliare" ADD CONSTRAINT "UnitaImmobiliare_condominioId_fke
 ALTER TABLE "Tabella" ADD CONSTRAINT "Tabella_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "ContoMastro" ADD CONSTRAINT "ContoMastro_tabellaId_fkey" FOREIGN KEY ("tabellaId") REFERENCES "Tabella"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ContoMastro" ADD CONSTRAINT "ContoMastro_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -375,6 +422,18 @@ ALTER TABLE "Risorsa" ADD CONSTRAINT "Risorsa_condominioId_fkey" FOREIGN KEY ("c
 
 -- AddForeignKey
 ALTER TABLE "Fondo" ADD CONSTRAINT "Fondo_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EstrattoConto" ADD CONSTRAINT "EstrattoConto_risorsaId_fkey" FOREIGN KEY ("risorsaId") REFERENCES "Risorsa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EstrattoConto" ADD CONSTRAINT "EstrattoConto_fondoId_fkey" FOREIGN KEY ("fondoId") REFERENCES "Fondo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EstrattoConto" ADD CONSTRAINT "EstrattoConto_gestioneId_fkey" FOREIGN KEY ("gestioneId") REFERENCES "Gestione"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Transazione" ADD CONSTRAINT "Transazione_gestioneId_fkey" FOREIGN KEY ("gestioneId") REFERENCES "Gestione"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transazione" ADD CONSTRAINT "Transazione_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -389,7 +448,22 @@ ALTER TABLE "Transazione" ADD CONSTRAINT "Transazione_risorsaId_fkey" FOREIGN KE
 ALTER TABLE "Transazione" ADD CONSTRAINT "Transazione_fondoId_fkey" FOREIGN KEY ("fondoId") REFERENCES "Fondo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DatiPatrimonialiIniziali" ADD CONSTRAINT "DatiPatrimonialiIniziali_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Movimento" ADD CONSTRAINT "Movimento_transazioneId_fkey" FOREIGN KEY ("transazioneId") REFERENCES "Transazione"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Movimento" ADD CONSTRAINT "Movimento_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Movimento" ADD CONSTRAINT "Movimento_gestioneMovimentoId_fkey" FOREIGN KEY ("gestioneMovimentoId") REFERENCES "Gestione"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Gestione" ADD CONSTRAINT "Gestione_gestionePrecedenteId_fkey" FOREIGN KEY ("gestionePrecedenteId") REFERENCES "Gestione"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Gestione" ADD CONSTRAINT "Gestione_condominioId_fkey" FOREIGN KEY ("condominioId") REFERENCES "Condominio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Preventivo" ADD CONSTRAINT "Preventivo_gestioneId_fkey" FOREIGN KEY ("gestioneId") REFERENCES "Gestione"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Preventivo" ADD CONSTRAINT "Preventivo_contoMastroId_fkey" FOREIGN KEY ("contoMastroId") REFERENCES "ContoMastro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,14 +1,14 @@
 // src/condomini/entities/condominio.entity.ts
 import { Condominio, TipologiaCondominio } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { DatiPatrimonialiInizialiEntity } from 'src/datiPatrimoniali/entities/dati-patrimoniali-iniziali.entity';
 import { UnitaImmobiliareEntity } from 'src/unitaImmobiliari/entities/unita-immobiliare.entity';
 import { TabellaEntity } from 'src/tabelle/entities/tabella.entity';
 import { ContoMastroEntity } from 'src/contiMastro/entities/conto-mastro.entity';
 import { RisorsaEntity } from 'src/risorse/entities/risorsa.entity';
 import { FondoEntity } from 'src/fondi/entities/fondo.entity';
 import { TransazioneEntity } from 'src/transazioni/entities/transazione.entity';
-//import { GestioneEntity } from 'src/gestioni/entities/gestione.entity';
+import { MovimentoEntity } from 'src/movimenti/entities/movimento.entity';
+import { GestioneEntity } from 'src/gestioni/entities/gestione.entity';
 
 export class CondominioEntity implements Condominio {
   @ApiProperty()
@@ -71,11 +71,17 @@ export class CondominioEntity implements Condominio {
   @ApiProperty({ required: false })
   descrizione: string;
 
+  @ApiProperty({ required: false })
+  note: string;
+
   @ApiProperty({ type: [String], required: false })
   allegati: string[];
 
   @ApiProperty({ type: String, format: 'date-time' })
   dataPresaInCarico: Date;
+
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  dataFineInCarico: Date;
 
   @ApiProperty()
   amministratoreId: number;
@@ -92,9 +98,6 @@ export class CondominioEntity implements Condominio {
 }
 
 export class CondominioWithRelationsEntity extends CondominioEntity {
-  @ApiProperty({ type: () => DatiPatrimonialiInizialiEntity, required: false })
-  datiPatrimonialiIniziali: DatiPatrimonialiInizialiEntity;
-
   @ApiProperty({ type: () => [UnitaImmobiliareEntity] })
   unitaImmobiliari: UnitaImmobiliareEntity[];
 
@@ -113,8 +116,11 @@ export class CondominioWithRelationsEntity extends CondominioEntity {
   @ApiProperty({ type: () => [TransazioneEntity] })
   transazioni: TransazioneEntity[];
 
-  /*@ApiProperty({ type: () => [GestioneEntity] })
-  gestioni: GestioneEntity[];*/
+  @ApiProperty({ type: () => [MovimentoEntity] })
+  movimenti: MovimentoEntity[];
+
+  @ApiProperty({ type: () => [GestioneEntity] })
+  gestioni: GestioneEntity[];
 
   constructor(partial: Partial<CondominioWithRelationsEntity>) {
     super(partial);

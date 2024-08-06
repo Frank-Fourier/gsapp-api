@@ -2,6 +2,7 @@
 import { Risorsa } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { TransazioneEntity } from '../../transazioni/entities/transazione.entity';  // Adjust the import path as necessary
+import { EstrattoContoEntity } from '../../estrattiConto/entities/estratto-conto.entity';  // Adjust the import path as necessary
 
 export class RisorsaEntity implements Risorsa {
   @ApiProperty()
@@ -13,7 +14,7 @@ export class RisorsaEntity implements Risorsa {
   @ApiProperty()
   denominazione: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   descrizione: string;
 
   @ApiProperty()
@@ -30,6 +31,9 @@ export class RisorsaEntity implements Risorsa {
 
   @ApiProperty({ required: false })
   note: string;
+
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  dataArchiviazione: Date;
 
   @ApiProperty()
   condominioId: number;
@@ -50,6 +54,19 @@ export class RisorsaWithTransazioniEntity extends RisorsaEntity {
   transazioni: TransazioneEntity[];
 
   constructor(partial: Partial<RisorsaWithTransazioniEntity>) {
+    super(partial);
+    Object.assign(this, partial);
+  }
+}
+
+export class RisorsaWithDetailsEntity extends RisorsaEntity {
+  @ApiProperty({ type: () => [TransazioneEntity] })
+  transazioni: TransazioneEntity[];
+
+  @ApiProperty({ type: () => [EstrattoContoEntity] })
+  estrattiConto: EstrattoContoEntity[];
+
+  constructor(partial: Partial<RisorsaWithDetailsEntity>) {
     super(partial);
     Object.assign(this, partial);
   }

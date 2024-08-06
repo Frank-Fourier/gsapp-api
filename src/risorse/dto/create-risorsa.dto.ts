@@ -1,6 +1,7 @@
 // src/risorsa/dto/create-risorsa.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsInt, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt, IsNumber, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';  // Import Type decorator
 
 export class CreateRisorsaDto {
   @IsNumber()
@@ -14,9 +15,9 @@ export class CreateRisorsaDto {
   denominazione: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  descrizione: string;
+  @IsOptional()
+  @ApiProperty({ required: false })
+  descrizione?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -42,6 +43,12 @@ export class CreateRisorsaDto {
   @IsOptional()
   @ApiProperty({ required: false })
   note?: string;
+
+  @IsDate()
+  @Type(() => Date)  // Use Type decorator to transform the string to Date
+  @IsOptional()
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  dataArchiviazione?: Date;
 
   @IsInt()
   @IsNotEmpty()
